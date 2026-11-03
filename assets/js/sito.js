@@ -34,10 +34,69 @@
       if (dest === null) return;
       e.preventDefault();
       var aperto = document.documentElement.classList.contains('menu-aperto');
+      if (aperto && !ridotto && a.closest('.menu nav')) { passaggioBicchieri(dest); return; }
       chiudiMenu();
       setTimeout(function () { vaiA(dest); }, aperto ? 500 : 0);
     });
   });
+
+  /* ---------- il passaggio coi bicchieri ----------
+     Dal menu: file di bicchieri d'oro grandi passano da destra a sinistra e coprono lo schermo;
+     sotto, la pagina salta dove si è cliccato; poi le file escono a sinistra e la pagina è già lì. */
+  var passaggio = $('.passaggio');
+  var filePassaggio = [];
+  var inPassaggio = false;
+  var TIPI = ['b-coppa', 'b-flute', 'b-martini', 'b-calice', 'b-tumbler'];
+  function costruisciPassaggio() {
+    if (filePassaggio.length) return;
+    var righe = window.innerWidth < 761 ? 6 : 5;
+    var passo = window.innerWidth < 761 ? 22 : 13;
+    for (var r = 0; r < righe; r++) {
+      var fila = document.createElement('div');
+      fila.className = 'passaggio__fila';
+      fila.style.top = (r * 100 / righe) + '%';
+      fila.style.height = 'calc(' + (100 / righe) + '% + 2px)';
+      var html = '';
+      var sfasa = (r % 2) * passo / 2;
+      for (var x = -passo * 0.9 + sfasa, i = 0; x < 100 + passo * 1.2; x += passo, i++) {
+        var tipo = TIPI[(r * 2 + i) % TIPI.length];
+        html += '<svg class="passaggio__bicchiere" style="left:' + x.toFixed(2) + 'vw" viewBox="-90 -275 180 285"><use href="#' + tipo + '" x="-90" y="-275" width="180" height="285"/></svg>';
+      }
+      fila.innerHTML = html;
+      passaggio.appendChild(fila);
+      filePassaggio.push(fila);
+    }
+    gsap.set('.passaggio__bicchiere', { xPercent: -50, yPercent: -50, transformOrigin: '50% 100%' });
+  }
+  function passaggioBicchieri(dest) {
+    if (inPassaggio) return;
+    inPassaggio = true;
+    costruisciPassaggio();
+    var bicchieri = $$('.passaggio__bicchiere');
+    var largo = window.innerWidth;
+    passaggio.classList.add('attivo');
+    gsap.set(filePassaggio, { x: largo * 1.3 });
+    gsap.set(bicchieri, { rotation: 16 });
+    var tl = gsap.timeline({
+      onComplete: function () {
+        passaggio.classList.remove('attivo');
+        inPassaggio = false;
+      }
+    });
+    tl.to(filePassaggio, { x: 0, duration: 0.85, ease: 'power3.inOut', stagger: { each: 0.06, from: 'center' } }, 0)
+      .to(bicchieri, { rotation: 0, duration: 1.1, ease: 'elastic.out(1, 0.45)', stagger: { each: 0.008, from: 'random' } }, 0.5)
+      .call(function () {
+        /* coperto tutto: si chiude il menu e la pagina salta dove si è cliccato */
+        chiudiMenu(true);
+        if (lenis) lenis.scrollTo(dest, { immediate: true, force: true });
+        else if (dest === 0) window.scrollTo(0, 0);
+        else dest.scrollIntoView();
+        ScrollTrigger.update();
+        if (window.innerWidth > 760) gsap.set('.bottone-menu', { scale: window.scrollY > window.innerHeight * 0.12 ? 1 : 0 });
+      }, null, 1.15)
+      .to(bicchieri, { rotation: -14, duration: 0.45, ease: 'power2.in', stagger: { each: 0.006, from: 'random' } }, 1.35)
+      .to(filePassaggio, { x: function () { return -window.innerWidth * 1.35; }, duration: 0.9, ease: 'power3.inOut', stagger: { each: 0.06, from: 'center' } }, 1.4);
+  }
 
   /* ---------- marchio: «Staff by Pronto» diventa «ProntoStaff+» ---------- */
   var marchio = $('.marchio');
@@ -149,15 +208,16 @@
     gsap.fromTo($$('.menu nav a'), { x: ridotto ? 0 : 80 }, { x: 0, duration: 0.8, stagger: 0.05, ease: CURVA, delay: 0.05 });
     gsap.to('.bottone-menu', { scale: 1, duration: 0.3, ease: 'power2.out' });
   }
-  function chiudiMenu() {
+  function chiudiMenu(subito) {
     if (!html.classList.contains('menu-aperto')) return;
+    var dur = ridotto || subito === true ? 0 : 0.8;
     html.classList.remove('menu-aperto');
     bottone.setAttribute('aria-expanded', 'false');
     bottone.setAttribute('aria-label', 'Apri il menu');
     pannello.setAttribute('aria-hidden', 'true');
     if (lenis) lenis.start();
-    gsap.to(pannello, { x: function () { return pannello.offsetWidth + 120; }, duration: ridotto ? 0 : 0.8, ease: CURVA, overwrite: true });
-    gsap.to(curvaMenu, { attr: { d: PIENA }, duration: ridotto ? 0 : 0.8, ease: CURVA });
+    gsap.to(pannello, { x: function () { return pannello.offsetWidth + 120; }, duration: dur, ease: CURVA, overwrite: true });
+    gsap.to(curvaMenu, { attr: { d: PIENA }, duration: dur, ease: CURVA });
     if (window.innerWidth > 760 && window.scrollY < 120) gsap.to('.bottone-menu', { scale: 0, duration: 0.3, ease: 'power2.out' });
   }
   /* il «+» del menu: uno solo, che scivola da una voce all'altra come una gomma */

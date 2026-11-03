@@ -1172,3 +1172,36 @@ button {
 .curva i {
   box-shadow: 0 30px 60px rgba(11, 11, 10, 0.28);
 }
+
+/* ---------- il passaggio coi bicchieri (voci del menu) ---------- */
+
+.passaggio {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.passaggio.attivo {
+  visibility: visible;
+  pointer-events: auto;
+}
+.passaggio__fila {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  background: var(--nero);
+  will-change: transform;
+}
+.passaggio__fila:nth-child(even) {
+  background: #101010;
+}
+.passaggio__bicchiere {
+  position: absolute;
+  top: 50%;
+  height: 74%;
+  width: auto;
+  aspect-ratio: 180 / 285;
+  overflow: visible;
+}
