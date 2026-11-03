@@ -1148,3 +1148,37 @@ button {
 .mini--oro {
   fill: var(--oro);
 }
+
+/* ---------- il piede d'oro: la curva nera del contenuto si vede sopra ---------- */
+
+.piede {
+  --linea: rgba(11, 11, 10, 0.2);
+  background: var(--oro);
+  color: var(--nero);
+}
+.piede .piccolo {
+  color: rgba(11, 11, 10, 0.58);
+}
+.piede .segno-sotto {
+  color: var(--nero);
+}
+.piede .pillola {
+  color: var(--nero);
+  border-color: rgba(11, 11, 10, 0.28);
+}
+.piede .pillola .riempi {
+  background: var(--nero);
+}
+.piede .pieno {
+  color: var(--oro) !important;
+}
+.tondo--nero {
+  background: var(--nero);
+  color: var(--oro);
+}
+.tondo--nero .riempi {
+  background: #2a2924;
+}
+.curva i {
+  box-shadow: 0 30px 60px rgba(11, 11, 10, 0.28);
+}
