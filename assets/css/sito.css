@@ -1187,21 +1187,16 @@ button {
   visibility: visible;
   pointer-events: auto;
 }
-.passaggio__fila {
+.passaggio__fondo {
   position: absolute;
-  left: 0;
-  width: 100vw;
-  background: var(--nero);
+  inset: 0;
+  background: var(--oro);
   will-change: transform;
-}
-.passaggio__fila:nth-child(even) {
-  background: #101010;
 }
 .passaggio__bicchiere {
   position: absolute;
-  top: 50%;
-  height: 74%;
   width: auto;
   aspect-ratio: 180 / 285;
   overflow: visible;
+  will-change: transform;
 }

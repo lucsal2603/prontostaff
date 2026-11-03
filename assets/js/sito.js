@@ -41,50 +41,61 @@
   });
 
   /* ---------- il passaggio coi bicchieri ----------
-     Dal menu: file di bicchieri d'oro grandi passano da destra a sinistra e coprono lo schermo;
-     sotto, la pagina salta dove si è cliccato; poi le file escono a sinistra e la pagina è già lì. */
+     Dal menu: tanti bicchieri d'oro enormi arrivano da destra, in posizioni e angolature diverse,
+     e con il fondo d'oro dietro coprono tutto lo schermo; sotto, la pagina salta dove si è cliccato;
+     poi tutto riparte verso sinistra e la pagina è già lì. */
   var passaggio = $('.passaggio');
-  var filePassaggio = [];
   var inPassaggio = false;
   var TIPI = ['b-coppa', 'b-flute', 'b-martini', 'b-calice', 'b-tumbler'];
+  var ORI = ['#e9b83c', '#f2c650', '#d9a42a', '#f6d77a', '#c99520'];
+  function caso(a, b) { return a + Math.random() * (b - a); }
   function costruisciPassaggio() {
-    if (filePassaggio.length) return;
-    var righe = window.innerWidth < 761 ? 6 : 5;
-    var passo = window.innerWidth < 761 ? 22 : 13;
+    passaggio.innerHTML = '<div class="passaggio__fondo"></div>';
+    var stretto = window.innerWidth < 761;
+    var colonne = stretto ? 3 : 6, righe = stretto ? 4 : 3;
+    var pezzi = [];
+    /* una griglia mossa a caso, così i bicchieri coprono tutto lo schermo senza buchi grandi */
     for (var r = 0; r < righe; r++) {
-      var fila = document.createElement('div');
-      fila.className = 'passaggio__fila';
-      fila.style.top = (r * 100 / righe) + '%';
-      fila.style.height = 'calc(' + (100 / righe) + '% + 2px)';
-      var html = '';
-      var sfasa = (r % 2) * passo / 2;
-      for (var x = -passo * 0.9 + sfasa, i = 0; x < 100 + passo * 1.2; x += passo, i++) {
-        var tipo = TIPI[(r * 2 + i) % TIPI.length];
-        html += '<svg class="passaggio__bicchiere" style="left:' + x.toFixed(2) + 'vw" viewBox="-90 -275 180 285"><use href="#' + tipo + '" x="-90" y="-275" width="180" height="285"/></svg>';
+      for (var c = 0; c < colonne; c++) {
+        pezzi.push({ x: (c + 0.5) / colonne * 100 + caso(-7, 7), y: (r + 0.5) / righe * 100 + caso(-10, 10) });
       }
-      fila.innerHTML = html;
-      passaggio.appendChild(fila);
-      filePassaggio.push(fila);
     }
-    gsap.set('.passaggio__bicchiere', { xPercent: -50, yPercent: -50, transformOrigin: '50% 100%' });
+    for (var k = 0; k < (stretto ? 6 : 9); k++) pezzi.push({ x: caso(-5, 105), y: caso(-5, 105) });
+    pezzi.sort(function () { return Math.random() - 0.5; });
+    var html = '';
+    pezzi.forEach(function (p, i) {
+      var alto = stretto ? caso(48, 80) : caso(62, 105);
+      html += '<svg class="passaggio__bicchiere" style="left:' + p.x.toFixed(1) + 'vw;top:' + p.y.toFixed(1) + 'vh;height:' + alto.toFixed(1) + 'vh;color:' + ORI[i % ORI.length] + '" viewBox="-90 -275 180 285"><use href="#' + TIPI[i % TIPI.length] + '" x="-90" y="-275" width="180" height="285"/></svg>';
+    });
+    passaggio.insertAdjacentHTML('beforeend', html);
+    return $$('.passaggio__bicchiere');
   }
   function passaggioBicchieri(dest) {
     if (inPassaggio) return;
     inPassaggio = true;
-    costruisciPassaggio();
-    var bicchieri = $$('.passaggio__bicchiere');
+    var bicchieri = costruisciPassaggio();
+    var fondo = $('.passaggio__fondo');
     var largo = window.innerWidth;
     passaggio.classList.add('attivo');
-    gsap.set(filePassaggio, { x: largo * 1.3 });
-    gsap.set(bicchieri, { rotation: 16 });
+    gsap.set(fondo, { x: largo * 1.05 });
+    bicchieri.forEach(function (b) {
+      var giro = caso(-70, 70);
+      gsap.set(b, { xPercent: -50, yPercent: -50, transformOrigin: '50% 50%', x: largo * caso(1.1, 1.6), rotation: giro + caso(30, 60) });
+      b._giro = giro;
+    });
     var tl = gsap.timeline({
       onComplete: function () {
         passaggio.classList.remove('attivo');
+        passaggio.innerHTML = '';
         inPassaggio = false;
       }
     });
-    tl.to(filePassaggio, { x: 0, duration: 0.85, ease: 'power3.inOut', stagger: { each: 0.06, from: 'center' } }, 0)
-      .to(bicchieri, { rotation: 0, duration: 1.1, ease: 'elastic.out(1, 0.45)', stagger: { each: 0.008, from: 'random' } }, 0.5)
+    bicchieri.forEach(function (b) {
+      var t = caso(0, 0.38);
+      tl.to(b, { x: 0, duration: caso(0.75, 0.95), ease: 'power3.out' }, t)
+        .to(b, { rotation: b._giro, duration: 1.2, ease: 'elastic.out(1, 0.5)' }, t + 0.1);
+    });
+    tl.to(fondo, { x: 0, duration: 0.8, ease: 'power3.inOut' }, 0.22)
       .call(function () {
         /* coperto tutto: si chiude il menu e la pagina salta dove si è cliccato */
         chiudiMenu(true);
@@ -93,9 +104,11 @@
         else dest.scrollIntoView();
         ScrollTrigger.update();
         if (window.innerWidth > 760) gsap.set('.bottone-menu', { scale: window.scrollY > window.innerHeight * 0.12 ? 1 : 0 });
-      }, null, 1.15)
-      .to(bicchieri, { rotation: -14, duration: 0.45, ease: 'power2.in', stagger: { each: 0.006, from: 'random' } }, 1.35)
-      .to(filePassaggio, { x: function () { return -window.innerWidth * 1.35; }, duration: 0.9, ease: 'power3.inOut', stagger: { each: 0.06, from: 'center' } }, 1.4);
+      }, null, 1.1);
+    tl.to(fondo, { x: -largo * 1.05, duration: 0.85, ease: 'power3.inOut' }, 1.4);
+    bicchieri.forEach(function (b) {
+      tl.to(b, { x: -largo * caso(1.3, 1.8), rotation: '-=' + caso(30, 60), duration: caso(0.7, 0.9), ease: 'power3.in' }, 1.25 + caso(0, 0.3));
+    });
   }
 
   /* ---------- marchio: «Staff by Pronto» diventa «ProntoStaff+» ---------- */
