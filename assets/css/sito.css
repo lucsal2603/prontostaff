@@ -178,10 +178,6 @@ button {
   height: 1.5em;
   line-height: 1.5em;
 }
-.marchio__binario {
-  width: var(--w1, auto);
-  transition: width 0.8s var(--curva);
-}
 .marchio__riga {
   display: flex;
   transition: transform 0.8s var(--curva);
@@ -192,12 +188,6 @@ button {
 @media (hover: hover) {
   .marchio:hover .marchio__copy {
     transform: rotate(360deg);
-  }
-  .marchio:hover .marchio__binario {
-    width: var(--w2, auto);
-  }
-  .marchio:hover .marchio__riga {
-    transform: translateX(calc(-1 * var(--a, 0px)));
   }
 }
 .testata__nav {
