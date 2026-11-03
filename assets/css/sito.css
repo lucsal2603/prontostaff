@@ -741,7 +741,7 @@ button {
   height: 1.6em;
   overflow: hidden;
   color: var(--osso);
-  min-width: 10ch;
+  width: 11ch;
 }
 .figure__nomi span {
   position: absolute;
@@ -1408,4 +1408,47 @@ button {
   margin-left: 0.04em;
   vertical-align: 0.42em;
   color: var(--oro);
+}
+
+/* movimento ridotto: la pagina ferma, tutto leggibile */
+.ridotto .apertura__sopra {
+  display: none;
+}
+.ridotto .manifesto__testo .parola {
+  opacity: 1;
+}
+.ridotto .caso {
+  opacity: 1;
+}
+.ridotto .figure {
+  height: auto;
+}
+.ridotto .figure__capo {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  padding: 90px var(--margine) 0;
+}
+.ridotto .figure__avanzamento,
+.ridotto .figure__filo {
+  display: none;
+}
+.ridotto .figure__binario {
+  position: relative;
+  flex-direction: column;
+}
+.ridotto .figura {
+  height: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.ridotto .figura__foto {
+  height: 60vh;
+}
+.ridotto .passo__segno {
+  transform: none;
+}
+.ridotto .passi__filo i {
+  transform: none;
 }

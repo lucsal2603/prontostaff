@@ -306,9 +306,10 @@
 
     gsap.set(fotoImg, { xPercent: spostamento() });
     if (ridotto) {
+      /* movimento ridotto: tutto già al suo posto, niente binari né parallasse */
+      document.documentElement.classList.add('ridotto');
       car.remove();
       finestra.apri = 1; disegnaFinestra();
-      costruisci();
       return;
     }
 
