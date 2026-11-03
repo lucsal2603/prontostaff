@@ -1205,3 +1205,10 @@ button {
   aspect-ratio: 180 / 285;
   overflow: visible;
 }
+
+/* schermi senza mouse: il nome che scorre resta fisso in fondo allo schermo */
+.nome-scorre--fisso {
+  position: fixed;
+  z-index: 40;
+  bottom: max(12px, env(safe-area-inset-bottom));
+}

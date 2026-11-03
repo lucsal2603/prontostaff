@@ -425,6 +425,13 @@
   /* ---------- l'ingresso ---------- */
   function entra() {
     var car = $('.caricamento');
+    /* sugli schermi senza mouse il nome che scorre resta sempre sullo schermo, sopra le sezioni */
+    var fisso = window.matchMedia('(hover: none)').matches;
+    if (fisso) {
+      var nome = $('.nome-scorre');
+      document.body.appendChild(nome);
+      nome.classList.add('nome-scorre--fisso');
+    }
     if (ridotto) {
       car.remove();
       $$('.anteprima, .cursore, .cursore-testo').forEach(function (el) { el.remove(); });
@@ -448,6 +455,10 @@
       .to('.caricamento', { yPercent: -100, duration: 0.8, ease: CURVA }, fine + 0.15)
       .to('.caricamento__curva path', { attr: { d: 'M0 0 L1000 0 Q500 0 0 0Z' }, duration: 0.8, ease: CURVA }, fine + 0.45)
       .to('.apertura__dentro', { y: 0, duration: 1.2, ease: 'power4.out' }, fine + 0.3);
+    if (fisso) {
+      gsap.set('.nome-scorre--fisso', { y: 160 });
+      tl.to('.nome-scorre--fisso', { y: 0, duration: 1.2, ease: 'power4.out' }, fine + 0.3);
+    }
     costruisci();
   }
 
