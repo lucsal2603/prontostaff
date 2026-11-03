@@ -54,23 +54,37 @@
 
   /* ---------- pulsanti magnetici ---------- */
   if (conMouse && !ridotto) {
+    /* una molla per ogni pulsante: segue il mouse e torna a posto con un piccolo rimbalzo,
+       senza tween che si accavallano (prima il ritorno cancellava le altre animazioni) */
+    var molle = [];
     $$('.magnete').forEach(function (el) {
-      var dentro = $('.testo, .linee', el) || el.firstElementChild;
-      var forza = el.classList.contains('bottone-menu') || el.querySelector('.tondo') ? 0.35 : 0.25;
-      var ex = gsap.quickTo(el, 'x', { duration: 0.8, ease: 'power3.out' });
-      var ey = gsap.quickTo(el, 'y', { duration: 0.8, ease: 'power3.out' });
-      var tx = dentro ? gsap.quickTo(dentro, 'x', { duration: 0.8, ease: 'power3.out' }) : null;
-      var ty = dentro ? gsap.quickTo(dentro, 'y', { duration: 0.8, ease: 'power3.out' }) : null;
+      var dentro = $('.testo, .linee', el);
+      var forza = el.querySelector('.tondo') ? 0.35 : 0.25;
+      var m = { el: el, dentro: dentro, x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, ferma: true };
+      var sx = gsap.quickSetter(el, 'x', 'px'), sy = gsap.quickSetter(el, 'y', 'px');
+      var dx = dentro ? gsap.quickSetter(dentro, 'x', 'px') : null, dy = dentro ? gsap.quickSetter(dentro, 'y', 'px') : null;
+      m.applica = function () { sx(m.x); sy(m.y); if (dx) { dx(m.x * 0.5); dy(m.y * 0.5); } };
       el.addEventListener('mousemove', function (e) {
         var r = el.getBoundingClientRect();
-        var dx = e.clientX - r.left - r.width / 2;
-        var dy = e.clientY - r.top - r.height / 2;
-        ex(dx * forza); ey(dy * forza);
-        if (tx) { tx(dx * forza * 0.5); ty(dy * forza * 0.5); }
+        m.tx = (e.clientX - (r.left - m.x + r.width / 2)) * forza;
+        m.ty = (e.clientY - (r.top - m.y + r.height / 2)) * forza;
+        m.ferma = false;
       });
-      el.addEventListener('mouseleave', function () {
-        gsap.to(el, { x: 0, y: 0, duration: 1.4, ease: 'elastic.out(1, 0.3)', overwrite: true });
-        if (dentro) gsap.to(dentro, { x: 0, y: 0, duration: 1.4, ease: 'elastic.out(1, 0.3)', overwrite: true });
+      el.addEventListener('mouseleave', function () { m.tx = 0; m.ty = 0; m.ferma = false; });
+      molle.push(m);
+    });
+    gsap.ticker.add(function (t, dt) {
+      var k = Math.min(dt, 40) / 16.667;
+      molle.forEach(function (m) {
+        if (m.ferma) return;
+        m.vx += (m.tx - m.x) * 0.09 * k; m.vy += (m.ty - m.y) * 0.09 * k;
+        var smorza = Math.pow(0.78, k);
+        m.vx *= smorza; m.vy *= smorza;
+        m.x += m.vx * k; m.y += m.vy * k;
+        if (Math.abs(m.tx - m.x) < 0.05 && Math.abs(m.ty - m.y) < 0.05 && Math.abs(m.vx) < 0.05 && Math.abs(m.vy) < 0.05) {
+          m.x = m.tx; m.y = m.ty; m.ferma = true;
+        }
+        m.applica();
       });
     });
 
@@ -146,6 +160,39 @@
     gsap.to(curvaMenu, { attr: { d: PIENA }, duration: ridotto ? 0 : 0.8, ease: CURVA });
     if (window.innerWidth > 760 && window.scrollY < 120) gsap.to('.bottone-menu', { scale: 0, duration: 0.3, ease: 'power2.out' });
   }
+  /* il «+» del menu: uno solo, che scivola da una voce all'altra come una gomma */
+  var segno = $('.menu__segno');
+  var vociMenu = $$('.menu nav a');
+  var sezioniMenu = vociMenu.map(function (a) { var id = a.getAttribute('href'); return id === '#inizio' ? document.body : $(id); });
+  var vocAttiva = 0, segnoY = null;
+  function centroVoce(i) { return vociMenu[i].offsetTop + vociMenu[i].offsetHeight / 2; }
+  function vaiSegno(i, subito) {
+    var y = centroVoce(i);
+    if (subito || segnoY === null || ridotto) { gsap.set(segno, { y: y }); segnoY = y; return; }
+    var d = Math.abs(y - segnoY);
+    if (d < 1) return;
+    segnoY = y;
+    var allunga = 1 + Math.min(d / 80, 1.3);
+    gsap.to(segno, { y: y, duration: 0.95, ease: 'elastic.out(1, 0.55)', overwrite: 'auto' });
+    gsap.timeline({ overwrite: 'auto' })
+      .to(segno, { scaleY: allunga, scaleX: 0.72, duration: 0.16, ease: 'power2.out' })
+      .to(segno, { scaleY: 1, scaleX: 1, duration: 0.9, ease: 'elastic.out(1, 0.32)' });
+    gsap.to(segno, { rotation: '+=90', duration: 1, ease: 'elastic.out(1, 0.45)' });
+  }
+  function sezioneAttuale() {
+    var y = window.scrollY + window.innerHeight * 0.4, scelta = 0;
+    sezioniMenu.forEach(function (s, i) { if (s && s !== document.body && s.getBoundingClientRect().top + window.scrollY <= y) scelta = i; });
+    return scelta;
+  }
+  vociMenu.forEach(function (a, i) { a.addEventListener('mouseenter', function () { vaiSegno(i); }); });
+  $('.menu nav').addEventListener('mouseleave', function () { vaiSegno(vocAttiva); });
+  bottone.addEventListener('click', function () {
+    if (html.classList.contains('menu-aperto')) return;
+    vocAttiva = sezioneAttuale();
+    vaiSegno(vocAttiva, true);
+    gsap.fromTo(segno, { scale: 0, rotation: -90 }, { scale: 1, rotation: 0, duration: 1, delay: 0.35, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
+  });
+
   bottone.addEventListener('click', function () { if (html.classList.contains('menu-aperto')) chiudiMenu(); else apriMenu(); });
   $('.velo-menu').addEventListener('click', chiudiMenu);
   window.addEventListener('keydown', function (e) { if (e.key === 'Escape') chiudiMenu(); });
