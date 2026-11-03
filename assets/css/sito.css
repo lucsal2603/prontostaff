@@ -363,7 +363,7 @@ button {
   border-radius: 999px;
   cursor: pointer;
   color: var(--osso);
-  transition: color 0.4s var(--curva);
+  transition: color 0.25s var(--curva) 0.22s;
 }
 .tondo {
   width: clamp(130px, 12vw, 180px);
@@ -396,10 +396,11 @@ button {
 .riempi {
   position: absolute;
   z-index: 1;
-  left: -25%;
+  left: 0;
+  top: 0;
   width: 150%;
-  height: 200%;
-  top: 100%;
+  aspect-ratio: 1;
+  transform: translateY(300%);
   border-radius: 50%;
   background: var(--oro);
   pointer-events: none;
@@ -409,6 +410,7 @@ button {
 }
 .pieno {
   color: var(--nero) !important;
+  transition: color 0.18s var(--curva) 0.04s !important;
 }
 
 /* ---------- apertura ---------- */
@@ -675,14 +677,13 @@ button {
 }
 .fila {
   display: flex;
-  gap: 3vw;
-  width: 120vw;
-  margin-left: -10vw;
+  width: max-content;
   will-change: transform;
 }
 .tessera {
   flex: none;
-  width: calc((120vw - 9vw) / 4);
+  margin-right: 3vw;
+  width: 27.75vw;
   aspect-ratio: 1.33;
   display: grid;
   place-items: center;
@@ -998,12 +999,8 @@ button {
     height: 76%;
     object-fit: cover;
   }
-  .fila {
-    width: 180vw;
-    margin-left: -20vw;
-  }
   .tessera {
-    width: calc((180vw - 9vw) / 4);
+    width: 62vw;
   }
   .passi {
     grid-template-columns: 1fr;
@@ -1047,4 +1044,8 @@ button {
     transition-duration: 0.01ms !important;
     animation: none !important;
   }
+}
+
+.pieno sup {
+  color: var(--nero);
 }

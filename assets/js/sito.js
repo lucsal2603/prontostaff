@@ -74,22 +74,34 @@
       });
     });
 
-    /* il riempimento che sale dal basso */
+    /* il riempimento che sale dal basso: un cerchio grande quanto serve a coprire tutto il pulsante */
     $$('.tondo, .pillola').forEach(function (b) {
       var riempi = $('.riempi', b);
       if (!riempi) return;
-      var tl = gsap.timeline({ paused: true });
-      tl.to(riempi, { top: '-25%', width: '150%', duration: 0.4, ease: 'power3.in' }, 'entra')
-        .to(riempi, { top: '-150%', width: '125%', duration: 0.25 }, 'esci');
-      var attesa = null;
+      var D = 0, H = 0, uscita = null;
+      function misura() {
+        var w = b.offsetWidth; H = b.offsetHeight;
+        D = Math.ceil(Math.sqrt(w * w + H * H) * 1.15);
+        gsap.set(riempi, { width: D, height: D, left: (w - D) / 2, top: 0 });
+      }
+      misura();
+      gsap.set(riempi, { y: H });
+      window.addEventListener('resize', function () {
+        misura();
+        gsap.set(riempi, { y: b.classList.contains('pieno') ? (H - D) / 2 : H });
+      });
       b.addEventListener('mouseenter', function () {
-        if (attesa) clearTimeout(attesa);
-        tl.tweenFromTo('entra', 'esci');
+        if (uscita) { uscita.kill(); uscita = null; }
+        if (!b.classList.contains('pieno')) { misura(); gsap.set(riempi, { y: H }); }
         b.classList.add('pieno');
+        gsap.to(riempi, { y: (H - D) / 2, duration: 0.5, ease: 'power3.out', overwrite: true });
       });
       b.addEventListener('mouseleave', function () {
         b.classList.remove('pieno');
-        attesa = setTimeout(function () { tl.play(); }, 300);
+        uscita = gsap.to(riempi, {
+          y: -D, duration: 0.45, ease: 'power3.in', overwrite: true,
+          onComplete: function () { gsap.set(riempi, { y: H }); uscita = null; }
+        });
       });
     });
   }
@@ -230,8 +242,30 @@
     gsap.from('.figure__altro', { y: 30, opacity: 0, duration: 1, scrollTrigger: { trigger: '.figure__altro', start: 'top 95%' } });
 
     /* le due file vanno in versi opposti */
-    gsap.fromTo('.fila--a', { xPercent: 0 }, { xPercent: -8, ease: 'none', scrollTrigger: { trigger: '.file', start: 'top bottom', end: 'bottom top', scrub: true } });
-    gsap.fromTo('.fila--b', { xPercent: -8 }, { xPercent: 0, ease: 'none', scrollTrigger: { trigger: '.file', start: 'top bottom', end: 'bottom top', scrub: true } });
+    /* il carosello: due file che vanno sempre, in versi opposti, e accelerano con lo scroll */
+    var giri = [];
+    $$('.fila').forEach(function (f, i) {
+      $$('.tessera', f).forEach(function (t) {
+        var copia = t.cloneNode(true);
+        copia.setAttribute('aria-hidden', 'true');
+        f.appendChild(copia);
+      });
+      giri.push(i === 0
+        ? gsap.fromTo(f, { xPercent: 0 }, { xPercent: -50, duration: 46, ease: 'none', repeat: -1 })
+        : gsap.fromTo(f, { xPercent: -50 }, { xPercent: 0, duration: 46, ease: 'none', repeat: -1 }));
+    });
+    ScrollTrigger.create({
+      trigger: '.file', start: 'top bottom', end: 'bottom top',
+      onUpdate: function (s) {
+        var spinta = Math.min(6, 1 + Math.abs(s.getVelocity()) / 400);
+        giri.forEach(function (g) {
+          gsap.to(g, {
+            timeScale: spinta, duration: 0.2, overwrite: true,
+            onComplete: function () { gsap.to(g, { timeScale: 1, duration: 1.2, ease: 'power2.out' }); }
+          });
+        });
+      }
+    });
 
     /* metodo */
     SplitText.create('.metodo__capo h2', {
