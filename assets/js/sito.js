@@ -8,7 +8,7 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var CURVA = 'power4.inOut';
 
-  gsap.registerPlugin(ScrollTrigger, SplitText);
+  gsap.registerPlugin(ScrollTrigger, SplitText, MorphSVGPlugin);
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
@@ -275,6 +275,32 @@
       }
     });
     gsap.from('.metodo__capo p', { opacity: 0, duration: 1.2, scrollTrigger: { trigger: '.metodo', start: 'top 75%' } });
+    /* il rinforzo: lo staff c'è, mancano tre persone, arrivano quelle di ProntoStaff+ */
+    SplitText.create('.rinforzo__frase', {
+      type: 'lines', mask: 'lines', autoSplit: true,
+      onSplit: function (s) {
+        return gsap.from(s.lines, { yPercent: 105, duration: 1.1, stagger: 0.1, ease: 'power4.out', scrollTrigger: { trigger: '.rinforzo', start: 'top 80%' } });
+      }
+    });
+    var staff = $$('.omino--staff'), oro = $$('.omino--oro'), posti = $$('.posto');
+    var piu = $$('.omino__piu');
+    gsap.set(oro, { y: -420, opacity: 0 });
+    gsap.set(piu, { scale: 0, rotation: -90, transformOrigin: '50% 50%' });
+    gsap.set(posti, { opacity: 0 });
+    var tlR = gsap.timeline({ scrollTrigger: { trigger: '.rinforzo__squadra', start: 'top 78%', toggleActions: 'play none none reverse' } });
+    tlR.from(staff, { y: 46, opacity: 0, duration: 0.9, stagger: 0.06, ease: 'power3.out' }, 0)
+      .to(posti, { opacity: 1, duration: 0.6, stagger: 0.12, ease: 'power2.out' }, 0.45)
+      .fromTo(posti, { strokeDashoffset: 60 }, { strokeDashoffset: 0, duration: 1.4, ease: 'none' }, 0.45);
+    oro.forEach(function (o, i) {
+      var t = 1.25 + i * 0.32;
+      tlR.to(o, { opacity: 1, duration: 0.2 }, t)
+        .to(o, { y: 0, duration: 0.9, ease: 'power4.out' }, t)
+        .to(posti[i], { opacity: 0, duration: 0.3 }, t + 0.55)
+        .fromTo(o, { scaleY: 1, scaleX: 1 }, { keyframes: [{ scaleY: 0.92, scaleX: 1.05, duration: 0.1 }, { scaleY: 1, scaleX: 1, duration: 0.45, ease: 'elastic.out(1, 0.5)' }], transformOrigin: '50% 100%' }, t + 0.5)
+        .to(piu[i], { scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(2.4)' }, t + 0.62);
+    });
+    tlR.from('.rinforzo__voce', { opacity: 0, y: 14, duration: 0.8, stagger: 0.12 }, 2.4);
+
     var passi = $$('.passo');
     gsap.from(passi.map(function (p) { return $('.passo__linea', p); }), { scaleX: 0, duration: 1.4, stagger: 0.1, ease: CURVA, scrollTrigger: { trigger: '.passi', start: 'top 85%' } });
     gsap.from(passi.map(function (p) { return $('.passo__segno', p); }), { scale: 0, rotation: -90, transformOrigin: '50% 50%', duration: 0.9, stagger: 0.1, delay: 0.3, ease: 'back.out(2)', scrollTrigger: { trigger: '.passi', start: 'top 85%' } });
@@ -299,8 +325,6 @@
       gsap.set('.bottone-menu', { scale: 1 });
       return;
     }
-    var parola = $('.caricamento__parola span');
-    var benvenuti = ['Benvenuti', 'Welcome', 'Bienvenue', 'Bienvenidos', 'Willkommen', 'Bem-vindos', 'Välkommen', 'Καλώς ήρθατε', 'Benvenuti'];
     var tl = gsap.timeline({
       onComplete: function () {
         car.remove();
@@ -309,13 +333,11 @@
       }
     });
     gsap.set('.apertura__dentro', { y: 160 });
-    tl.to('.caricamento__parola', { opacity: 0.85, duration: 0.6, ease: 'power2.out' }, 0.25);
-    benvenuti.forEach(function (w, i) {
-      if (i === 0) return;
-      tl.call(function () { parola.textContent = w; }, null, 1.05 + (i - 1) * 0.16);
-    });
-    var fine = 1.05 + (benvenuti.length - 1) * 0.16 + 0.25;
-    tl.to('.caricamento__parola', { opacity: 0, duration: 0.3, ease: 'power2.in' }, fine)
+    /* il logo animato: vassoio, bicchieri, cerchio, il «+» e la scritta */
+    var logo = animaLogo($('.caricamento .logo-scena'));
+    tl.add(logo, 0.15);
+    var fine = 0.15 + logo.duration() + 0.1;
+    tl.to('.caricamento .logo-scena', { y: -30, opacity: 0, duration: 0.45, ease: 'power2.in' }, fine)
       .to('.caricamento', { yPercent: -100, duration: 0.8, ease: CURVA }, fine + 0.15)
       .to('.caricamento__curva path', { attr: { d: 'M0 0 L1000 0 Q500 0 0 0Z' }, duration: 0.8, ease: CURVA }, fine + 0.45)
       .to('.apertura__dentro', { y: 0, duration: 1.2, ease: 'power4.out' }, fine + 0.3);

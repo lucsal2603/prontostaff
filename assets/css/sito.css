@@ -121,6 +121,13 @@ button {
 .caricamento__curva path {
   fill: var(--carbone);
 }
+.caricamento .logo-scena {
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 980px);
+  height: auto;
+  overflow: visible;
+}
 .caricamento__parola {
   position: relative;
   z-index: 2;
@@ -406,7 +413,7 @@ button {
   pointer-events: none;
 }
 .tondo--oro .riempi {
-  background: var(--osso);
+  background: #c8961f;
 }
 .pieno {
   color: var(--nero) !important;
@@ -848,9 +855,16 @@ button {
   place-items: center;
   flex: none;
 }
+.piede__volto {
+  position: relative;
+}
 .piede__volto svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 46%;
   height: 46%;
+  margin: -23% 0 0 -23%;
   color: var(--oro);
 }
 .piede__freccia {
@@ -869,8 +883,7 @@ button {
   position: absolute;
   z-index: 2;
   right: 6vw;
-  top: 0;
-  transform: translateY(-50%);
+  top: calc(clamp(130px, 12vw, 180px) / -2);
 }
 .piede__contatti {
   display: flex;
@@ -1013,6 +1026,7 @@ button {
   }
   .piede__chiama {
     right: 0;
+    top: -64px;
   }
   .piede__chiama .tondo {
     width: 128px;
@@ -1048,4 +1062,76 @@ button {
 
 .pieno sup {
   color: var(--nero);
+}
+
+/* ---------- il rinforzo: lo staff con le persone in più ---------- */
+
+.rinforzo {
+  margin: 0 0 clamp(80px, 9vw, 140px);
+  padding: clamp(50px, 6vw, 90px) clamp(24px, 5vw, 80px) clamp(36px, 4vw, 56px);
+  background: var(--carbone);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.rinforzo__frase {
+  margin: 0 0 clamp(40px, 5vw, 70px);
+  font-size: clamp(30px, 3.6vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 16ch;
+}
+.rinforzo__frase span {
+  color: var(--oro);
+}
+.rinforzo__squadra {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.rinforzo__suolo {
+  stroke: var(--linea);
+  stroke-width: 2;
+}
+.omino--staff {
+  fill: #4a4843;
+}
+.omino--oro {
+  fill: var(--oro);
+}
+.farfallino {
+  fill: var(--carbone);
+}
+.omino__piu {
+  fill: var(--oro);
+}
+.posto {
+  fill: none;
+  stroke: rgba(242, 237, 227, 0.35);
+  stroke-width: 2;
+  stroke-dasharray: 7 8;
+}
+.rinforzo__legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 40px;
+  margin-top: clamp(30px, 3.4vw, 46px);
+  font-size: 15px;
+  color: var(--osso-2);
+}
+.rinforzo__voce {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.mini {
+  width: 12px;
+  height: 40px;
+  flex: none;
+}
+.mini--staff {
+  fill: #4a4843;
+}
+.mini--oro {
+  fill: var(--oro);
 }

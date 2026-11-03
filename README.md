@@ -9,6 +9,8 @@ Sito statico, una pagina sola: HTML, CSS e JavaScript, con GSAP (ScrollTrigger, 
 - `src/index.html`: la pagina da modificare (i tracciati del logo sono segnaposto `{{PRONTO}}`, `{{STAFF}}`, `{{PIU}}`)
 - `src/logo.json`: i tracciati vettoriali del logo
 - `index.html`: la pagina finita, generata con `node build.mjs`
+- `logo-animato.html`: il logo animato da solo (vassoio, bicchieri, «+», scritta), con il tasto Rivedi; lo stesso che parte al caricamento del sito
+- `src/logo-scena.html` e `assets/js/logo-animato.js`: il disegno e il movimento del logo animato
 - `assets/css/sito.css`: lo stile
 - `assets/js/sito.js`: le animazioni
 - `assets/img/`: foto, logo, icona e immagine di condivisione
