@@ -252,6 +252,31 @@
   </footer>
 </main>
 
+<!-- l'omino col vassoio, che cammina in fondo allo schermo mentre si scorre -->
+<svg class="camminatore" aria-hidden="true" focusable="false">
+  <g class="om-tutto">
+    <ellipse class="om-ombra" cx="0" cy="2" rx="46" ry="5"/>
+    <g class="om-verso">
+      <path class="om-braccio-dietro om-scuro-tratto" fill="none" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+      <path class="om-gamba-dietro om-scuro-tratto" fill="none" stroke-width="31" stroke-linecap="round" stroke-linejoin="round"/>
+      <path class="om-gamba om-chiaro-tratto" fill="none" stroke-width="31" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="om-busto">
+        <path class="om-chiaro" d="M-36 -98 L-36 -150 Q-36 -194 0 -194 Q36 -194 36 -150 L36 -98 Q36 -92 30 -92 L-30 -92 Q-36 -92 -36 -98 Z"/>
+        <path class="om-fiocco" d="M-12 -178 L0 -172 L12 -178 L12 -164 L0 -170 L-12 -164 Z"/>
+        <g class="om-testa">
+          <circle class="om-chiaro" cx="0" cy="-238" r="25"/>
+          <g class="om-piu"><path class="om-chiaro" d="M-4 -324 H4 V-308 H20 V-300 H4 V-284 H-4 V-300 H-20 V-308 H-4 Z"/></g>
+        </g>
+        <g class="om-braccio">
+          <path class="om-chiaro-tratto" fill="none" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" d="M24 -176 L36 -132 L78 -142"/>
+          <rect class="om-vassoio" x="44" y="-158" width="96" height="7" rx="3.5"/>
+          <g class="om-flute"><path class="om-vetro" d="M-7 -36 L7 -36 Q8 -18 1.6 -14 L1.6 -3 L8 0 L-8 0 L-1.6 -3 L-1.6 -14 Q-8 -18 -7 -36 Z"/></g><g class="om-flute"><path class="om-vetro" d="M-7 -36 L7 -36 Q8 -18 1.6 -14 L1.6 -3 L8 0 L-8 0 L-1.6 -3 L-1.6 -14 Q-8 -18 -7 -36 Z"/></g><g class="om-flute"><path class="om-vetro" d="M-7 -36 L7 -36 Q8 -18 1.6 -14 L1.6 -3 L8 0 L-8 0 L-1.6 -3 L-1.6 -14 Q-8 -18 -7 -36 Z"/></g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+
 <script src="assets/js/gsap.min.js"></script>
 <script src="assets/js/ScrollTrigger.min.js"></script>
 <script src="assets/js/SplitText.min.js"></script>
@@ -259,5 +284,6 @@
 <script src="assets/js/logo-animato.js"></script>
 <script src="assets/js/lenis.min.js"></script>
 <script src="assets/js/sito.js"></script>
+<script src="assets/js/omino.js"></script>
 </body>
 </html>

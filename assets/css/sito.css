@@ -893,7 +893,7 @@ button {
   align-items: flex-end;
   gap: 30px;
   flex-wrap: wrap;
-  padding: clamp(80px, 10vw, 150px) var(--margine) 26px;
+  padding: clamp(80px, 10vw, 150px) var(--margine) 118px;
 }
 .piede__gruppi {
   display: flex;
@@ -1199,4 +1199,40 @@ button {
   aspect-ratio: 180 / 285;
   overflow: visible;
   will-change: transform;
+}
+
+/* ---------- l'omino col vassoio in fondo allo schermo ---------- */
+
+.camminatore {
+  --om: var(--oro);
+  --om-scuro: #b8891d;
+  --om-fiocco: #1b1b19;
+  --om-vassoio: #d9d3c7;
+  --om-vetro: #f2ede3;
+  position: fixed;
+  left: 0;
+  bottom: max(6px, env(safe-area-inset-bottom));
+  z-index: 40;
+  width: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.camminatore--su-oro {
+  --om: var(--nero);
+  --om-scuro: #3a3326;
+  --om-fiocco: var(--oro);
+  --om-vassoio: #2a2924;
+  --om-vetro: #2a2924;
+}
+.om-chiaro { fill: var(--om); transition: fill 0.5s var(--curva); }
+.om-chiaro-tratto { stroke: var(--om); transition: stroke 0.5s var(--curva); }
+.om-scuro-tratto { stroke: var(--om-scuro); transition: stroke 0.5s var(--curva); }
+.om-fiocco { fill: var(--om-fiocco); transition: fill 0.5s var(--curva); }
+.om-vassoio { fill: var(--om-vassoio); transition: fill 0.5s var(--curva); }
+.om-vetro { fill: var(--om-vetro); transition: fill 0.5s var(--curva); }
+.om-ombra { fill: #000; opacity: 0.45; }
+.camminatore--su-oro .om-ombra { opacity: 0.18; }
+.menu-aperto .camminatore { opacity: 0; transition: opacity 0.4s var(--curva); }
+@media (max-width: 760px) {
+  .piede__fondo { padding-bottom: 96px; }
 }
