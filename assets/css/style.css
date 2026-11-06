@@ -1,8 +1,6 @@
-/* ProntoStaff+ — foglio di stile */
-
 @font-face {
-  font-family: "Inter Tight";
-  src: url("../fonts/inter-tight-latin-wght-normal.woff2") format("woff2");
+  font-family: 'Inter Tight';
+  src: url('../fonts/inter-tight-latin-wght-normal.woff2') format('woff2');
   font-weight: 100 900;
   font-display: swap;
 }
@@ -17,7 +15,7 @@
   --linea: rgba(242, 237, 227, 0.14);
   --oro: #e9b83c;
 
-  --font: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --margine: clamp(20px, 3.05vw, 44px);
   --rientro: clamp(20px, 16vw, 230px);
   --curva: cubic-bezier(0.76, 0, 0.24, 1);
@@ -95,8 +93,6 @@ button {
   color: var(--grigio);
 }
 
-/* ---------- caricamento ---------- */
-
 .caricamento {
   position: fixed;
   inset: 0;
@@ -146,8 +142,6 @@ button {
   color: var(--oro);
   flex: none;
 }
-
-/* ---------- testata ---------- */
 
 .testata {
   position: absolute;
@@ -217,7 +211,6 @@ button {
   }
 }
 
-/* bottone tondo del menu */
 .bottone-menu {
   position: fixed;
   z-index: 60;
@@ -244,7 +237,9 @@ button {
   right: 0;
   height: 1px;
   background: currentColor;
-  transition: transform 0.4s var(--curva), top 0.4s var(--curva);
+  transition:
+    transform 0.4s var(--curva),
+    top 0.4s var(--curva);
 }
 .linee i:first-child {
   top: 0;
@@ -266,7 +261,6 @@ button {
   color: var(--nero);
 }
 
-/* il pannello del menu */
 .velo-menu {
   position: fixed;
   inset: 0;
@@ -348,8 +342,6 @@ button {
   margin-bottom: 8px;
 }
 
-/* ---------- pulsanti: tondo e pillola con il riempimento che sale ---------- */
-
 .magnete {
   display: inline-block;
 }
@@ -414,8 +406,6 @@ button {
   transition: color 0.18s var(--curva) 0.04s !important;
 }
 
-/* ---------- apertura ---------- */
-
 .apertura {
   position: relative;
   height: 100vh;
@@ -440,10 +430,16 @@ button {
   filter: brightness(0.78) contrast(1.06) saturate(0.92);
 }
 .apertura__foto::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(11, 11, 10, 0.45), rgba(11, 11, 10, 0) 26%, rgba(11, 11, 10, 0) 60%, rgba(11, 11, 10, 0.55));
+  background: linear-gradient(
+    180deg,
+    rgba(11, 11, 10, 0.45),
+    rgba(11, 11, 10, 0) 26%,
+    rgba(11, 11, 10, 0) 60%,
+    rgba(11, 11, 10, 0.55)
+  );
 }
 .luogo {
   position: absolute;
@@ -521,8 +517,6 @@ button {
   color: var(--oro);
 }
 
-/* ---------- intro ---------- */
-
 .contenuto {
   position: relative;
   z-index: 2;
@@ -552,8 +546,6 @@ button {
   line-height: 1.7;
 }
 
-/* ---------- elenco delle figure ---------- */
-
 .figure {
   position: relative;
   padding: clamp(60px, 6vw, 90px) 8vw clamp(80px, 8vw, 120px);
@@ -581,13 +573,17 @@ button {
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.035em;
-  transition: transform 0.4s var(--morbido), opacity 0.4s var(--morbido);
+  transition:
+    transform 0.4s var(--morbido),
+    opacity 0.4s var(--morbido);
 }
 .voce p {
   margin: 0;
   font-size: 17px;
   text-align: right;
-  transition: transform 0.4s var(--morbido), opacity 0.4s var(--morbido);
+  transition:
+    transform 0.4s var(--morbido),
+    opacity 0.4s var(--morbido);
 }
 .voce__foto {
   display: none;
@@ -613,7 +609,6 @@ button {
   color: var(--oro);
 }
 
-/* la cornice che segue il mouse */
 .anteprima,
 .cursore,
 .cursore-testo {
@@ -670,8 +665,6 @@ button {
   color: var(--nero);
 }
 
-/* ---------- le due file che scorrono ---------- */
-
 .file {
   position: relative;
   padding: 20px 0 clamp(120px, 14vw, 200px);
@@ -725,8 +718,6 @@ button {
   width: 14px;
   height: 14px;
 }
-
-/* ---------- metodo ---------- */
 
 .metodo {
   padding: 0 var(--rientro) clamp(120px, 14vw, 200px);
@@ -786,7 +777,6 @@ button {
   line-height: 1.65;
 }
 
-/* la curva che chiude il contenuto sul piede */
 .curva {
   position: relative;
   z-index: 3;
@@ -796,7 +786,7 @@ button {
   overflow: hidden;
 }
 .curva::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   right: 0;
@@ -813,8 +803,6 @@ button {
   background: var(--nero);
   box-shadow: 0 40px 60px rgba(0, 0, 0, 0.35);
 }
-
-/* ---------- piede ---------- */
 
 .piede {
   position: relative;
@@ -918,8 +906,6 @@ button {
 .piede__social a:last-child {
   margin-right: 0;
 }
-
-/* ---------- telefono e tablet ---------- */
 
 @media (max-width: 1000px) {
   :root {
@@ -1067,8 +1053,6 @@ button {
   color: var(--nero);
 }
 
-/* ---------- il rinforzo: lo staff con le persone in più ---------- */
-
 .rinforzo {
   margin: 0 0 clamp(80px, 9vw, 140px);
   padding: clamp(50px, 6vw, 90px) clamp(24px, 5vw, 80px) clamp(36px, 4vw, 56px);
@@ -1139,8 +1123,6 @@ button {
   fill: var(--oro);
 }
 
-/* ---------- il piede d'oro: la curva nera del contenuto si vede sopra ---------- */
-
 .piede {
   --linea: rgba(11, 11, 10, 0.2);
   background: var(--oro);
@@ -1173,8 +1155,6 @@ button {
   box-shadow: 0 30px 60px rgba(11, 11, 10, 0.28);
 }
 
-/* ---------- il passaggio coi bicchieri (voci del menu) ---------- */
-
 .passaggio {
   position: fixed;
   inset: 0;
@@ -1201,8 +1181,6 @@ button {
   will-change: transform;
 }
 
-/* ---------- l'omino col vassoio in fondo allo schermo ---------- */
-
 .camminatore {
   --om: var(--oro);
   --om-scuro: #b8891d;
@@ -1224,15 +1202,43 @@ button {
   --om-vassoio: #2a2924;
   --om-vetro: #2a2924;
 }
-.om-chiaro { fill: var(--om); transition: fill 0.5s var(--curva); }
-.om-chiaro-tratto { stroke: var(--om); transition: stroke 0.5s var(--curva); }
-.om-scuro-tratto { stroke: var(--om-scuro); transition: stroke 0.5s var(--curva); }
-.om-fiocco { fill: var(--om-fiocco); transition: fill 0.5s var(--curva); }
-.om-vassoio { fill: var(--om-vassoio); transition: fill 0.5s var(--curva); }
-.om-vetro { fill: var(--om-vetro); transition: fill 0.5s var(--curva); }
-.om-ombra { fill: #000; opacity: 0.45; }
-.camminatore--su-oro .om-ombra { opacity: 0.18; }
-.menu-aperto .camminatore { opacity: 0; transition: opacity 0.4s var(--curva); }
+.om-chiaro {
+  fill: var(--om);
+  transition: fill 0.5s var(--curva);
+}
+.om-chiaro-tratto {
+  stroke: var(--om);
+  transition: stroke 0.5s var(--curva);
+}
+.om-scuro-tratto {
+  stroke: var(--om-scuro);
+  transition: stroke 0.5s var(--curva);
+}
+.om-fiocco {
+  fill: var(--om-fiocco);
+  transition: fill 0.5s var(--curva);
+}
+.om-vassoio {
+  fill: var(--om-vassoio);
+  transition: fill 0.5s var(--curva);
+}
+.om-vetro {
+  fill: var(--om-vetro);
+  transition: fill 0.5s var(--curva);
+}
+.om-ombra {
+  fill: #000;
+  opacity: 0.45;
+}
+.camminatore--su-oro .om-ombra {
+  opacity: 0.18;
+}
+.menu-aperto .camminatore {
+  opacity: 0;
+  transition: opacity 0.4s var(--curva);
+}
 @media (max-width: 760px) {
-  .piede__fondo { padding-bottom: 96px; }
+  .piede__fondo {
+    padding-bottom: 96px;
+  }
 }

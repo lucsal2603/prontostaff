@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="assets/img/icona.png">
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/img/cocktail.webp" as="image">
-<link rel="stylesheet" href="assets/css/sito.css">
+<link rel="stylesheet" href="assets/css/style.css">
 <noscript><style>.caricamento{display:none}</style></noscript>
 </head>
 <body>
@@ -30,10 +30,8 @@
   <symbol id="b-tumbler" viewBox="-90 -275 180 285"><path fill="currentColor" d="M-50 -150 L50 -150 L43 0 L-43 0 Z"/><path fill="#fff4d6" opacity="0.55" d="M-38 -140 L-29 -140 L-27 -14 L-34 -14 Z"/></symbol>
 </svg>
 
-<!-- il passaggio coi bicchieri, quando si sceglie una voce del menu -->
 <div class="passaggio" aria-hidden="true"></div>
 
-<!-- caricamento: il logo animato -->
 <div class="caricamento" aria-hidden="true">
   <div class="caricamento__fondo"></div>
   <svg class="caricamento__curva" preserveAspectRatio="none" viewBox="0 0 1000 300"><path d="M0 0 L1000 0 Q500 300 0 0Z"/></svg>
@@ -75,7 +73,6 @@
 
 </div>
 
-<!-- testata -->
 <header class="testata">
   <a class="marchio" href="#inizio" aria-label="ProntoStaff+, torna all'inizio">
     <span class="marchio__copy">©</span>
@@ -106,6 +103,7 @@
   </div>
   <div class="menu__piede">
     <span class="piccolo">Contatti</span>
+    <!-- TODO: numero e mail veri -->
     <a href="https://wa.me/390000000000" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://www.instagram.com/prontostaffcatering" target="_blank" rel="noopener">Instagram</a>
     <a href="mailto:info@prontostaff.it">Email</a>
@@ -114,7 +112,6 @@
 
 <main id="inizio">
 
-  <!-- apertura -->
   <section class="apertura" aria-label="ProntoStaff+">
     <div class="apertura__dentro">
       <div class="apertura__foto">
@@ -151,7 +148,6 @@
 
   <div class="contenuto">
 
-    <!-- intro -->
     <section class="intro" aria-label="Chi siamo">
       <p class="intro__frase">Voi pensate all'evento. Al personale aggiuntivo pensiamo noi. Camerieri, bartender, facchini e hostess per <em>catering e banqueting</em>, anche last minute.</p>
       <div class="intro__lato">
@@ -160,7 +156,6 @@
       </div>
     </section>
 
-    <!-- figure -->
     <section class="figure" id="figure" aria-label="Le figure">
       <span class="piccolo figure__etichetta">Le figure</span>
       <div class="figure__elenco">
@@ -186,7 +181,6 @@
       </div>
     </section>
 
-    <!-- la cornice che segue il mouse -->
     <div class="anteprima" aria-hidden="true">
       <div class="anteprima__binario">
         <div class="anteprima__quadro" style="background:#1d1c19"><img src="assets/img/viale.webp" alt="" width="1199" height="1499" loading="lazy"></div>
@@ -198,7 +192,6 @@
     <div class="cursore" aria-hidden="true"></div>
     <div class="cursore-testo" aria-hidden="true">Chiedi</div>
 
-    <!-- le due file che scorrono -->
     <section class="file" aria-label="Gli eventi">
       <div class="fila fila--a">
         <div class="tessera tessera--osso"><img src="assets/img/strada.webp" alt="Camerieri servono calici e dolci all'aperto" width="710" height="1093" loading="lazy"></div>
@@ -214,7 +207,6 @@
       </div>
     </section>
 
-    <!-- metodo -->
     <section class="metodo" id="metodo" aria-labelledby="metodo-titolo">
       <div class="metodo__capo">
         <h2 id="metodo-titolo">Dalla richiesta<br><span>al servizio.</span></h2>
@@ -254,7 +246,6 @@
   </div>
   <div class="curva" aria-hidden="true"><i></i></div>
 
-  <!-- piede -->
   <footer class="piede" id="contatti">
     <div class="piede__dentro">
       <div class="piede__titolo">
@@ -287,7 +278,6 @@
   </footer>
 </main>
 
-<!-- l'omino col vassoio, che cammina in fondo allo schermo mentre si scorre -->
 <svg class="camminatore" aria-hidden="true" focusable="false">
   <g class="om-tutto">
     <ellipse class="om-ombra" cx="0" cy="2" rx="46" ry="5"/>
@@ -312,13 +302,13 @@
   </g>
 </svg>
 
-<script src="assets/js/gsap.min.js"></script>
-<script src="assets/js/ScrollTrigger.min.js"></script>
-<script src="assets/js/SplitText.min.js"></script>
-<script src="assets/js/MorphSVGPlugin.min.js"></script>
-<script src="assets/js/logo-animato.js"></script>
-<script src="assets/js/lenis.min.js"></script>
-<script src="assets/js/sito.js"></script>
-<script src="assets/js/omino.js"></script>
+<script src="assets/js/vendor/gsap.min.js"></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/js/vendor/SplitText.min.js"></script>
+<script src="assets/js/vendor/MorphSVGPlugin.min.js"></script>
+<script src="assets/js/logo.js"></script>
+<script src="assets/js/vendor/lenis.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/walker.js"></script>
 </body>
 </html>

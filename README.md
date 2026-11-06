@@ -1,35 +1,27 @@
 # ProntoStaff+
 
-Il sito di ProntoStaff+, personale per catering e banqueting.
+Sito one page di ProntoStaff+, personale per catering ed eventi.
 
-Sito statico, una pagina sola: HTML, CSS e JavaScript, con GSAP (ScrollTrigger, SplitText) e Lenis per lo scorrimento morbido. Le librerie e i caratteri (Bodoni Moda, Manrope) sono nel repository, senza CDN.
+HTML/CSS/JS senza framework. Animazioni con GSAP (ScrollTrigger, SplitText, MorphSVG) e Lenis per lo smooth scroll, entrambi in `assets/js/vendor`.
+
+## In locale
+
+```
+npx serve .
+```
+
+oppure qualsiasi server statico nella cartella.
 
 ## Struttura
 
-- `src/index.html`: la pagina da modificare (i tracciati del logo sono segnaposto `{{PRONTO}}`, `{{STAFF}}`, `{{PIU}}`)
-- `src/logo.json`: i tracciati vettoriali del logo
-- `index.html`: la pagina finita, generata con `node build.mjs`
-- `logo-animato.html`: il logo animato da solo (vassoio, bicchieri, «+», scritta), con il tasto Rivedi; lo stesso che parte al caricamento del sito
-- `src/logo-scena.html` e `assets/js/logo-animato.js`: il disegno e il movimento del logo animato
-- `assets/css/sito.css`: lo stile
-- `assets/js/sito.js`: le animazioni
-- `assets/img/`: foto, logo, icona e immagine di condivisione
-
-## Modificare
-
-Si cambia `src/index.html`, poi:
-
 ```
-node build.mjs
-python3 -m http.server 8411
+index.html
+logo-animato.html   intro del logo da sola
+assets/
+  css/style.css
+  js/main.js        loader, menu, scroll, hover
+  js/logo.js        animazione del logo
+  js/walker.js      omino in basso
+  js/vendor/
+  img/  fonts/
 ```
-
-e si apre http://localhost:8411.
-
-## Dati da completare prima della pubblicazione
-
-Nella pagina ci sono dei segnaposto da sostituire con i dati veri:
-
-- telefono e WhatsApp: `+39 000 000 0000` / `390000000000`
-- email: `info@prontostaff.it`
-- profilo Instagram: `https://www.instagram.com/prontostaffcatering`
