@@ -667,6 +667,83 @@
     });
     tlR.from('.rinforzo__voce', { opacity: 0, y: 14, duration: 0.8, stagger: 0.12 }, 2.4);
 
+    gsap.from('.rinforzo__testo', {
+      opacity: 0,
+      y: 24,
+      duration: 1.1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.rinforzo__testo', start: 'top 88%' }
+    });
+
+    // titoli delle sezioni nuove
+    $$('.evento__titolo, .selezione__capo h2, .servizi__capo h2').forEach(function (el) {
+      SplitText.create(el, {
+        type: 'lines',
+        mask: 'lines',
+        autoSplit: true,
+        onSplit: function (s) {
+          return gsap.from(s.lines, {
+            yPercent: 105,
+            duration: 1.1,
+            stagger: 0.08,
+            ease: 'power4.out',
+            scrollTrigger: { trigger: el, start: 'top 85%' }
+          });
+        }
+      });
+    });
+    $$('.selezione__capo p, .servizi__capo p').forEach(function (el) {
+      gsap.from(el, { opacity: 0, duration: 1.2, scrollTrigger: { trigger: el, start: 'top 90%' } });
+    });
+    gsap.from('.evento .caso', {
+      y: 50,
+      opacity: 0,
+      duration: 1.1,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.evento__casi', start: 'top 85%' }
+    });
+    gsap.from('.caso__segno', {
+      scale: 0,
+      rotation: -90,
+      transformOrigin: '50% 50%',
+      duration: 0.9,
+      stagger: 0.1,
+      delay: 0.35,
+      ease: 'back.out(2)',
+      scrollTrigger: { trigger: '.evento__casi', start: 'top 85%' }
+    });
+    gsap.from('.selezione__criteri article', {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.08,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.selezione__criteri', start: 'top 88%' }
+    });
+    $$('.scatto').forEach(function (el) {
+      gsap.from(el, {
+        clipPath: 'inset(100% 0% 0% 0% round 6px)',
+        duration: 1.3,
+        ease: 'expo.inOut',
+        scrollTrigger: { trigger: el, start: 'top 92%' }
+      });
+      gsap.from(el.querySelector('img'), {
+        scale: 1.3,
+        duration: 1.6,
+        ease: 'expo.out',
+        scrollTrigger: { trigger: el, start: 'top 92%' }
+      });
+    });
+    gsap.from('.richiesta__titolo, .richiesta__nota, .campo, .richiesta__invio', {
+      y: 24,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.04,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.richiesta', start: 'top 85%' }
+    });
+
     var passi = $$('.passo');
     gsap.from(
       passi.map(function (p) {

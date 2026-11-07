@@ -81,7 +81,8 @@
   <nav class="testata__nav" aria-label="Principale">
     <a class="magnete" href="#figure">Figure<svg class="segno-sotto"><use href="#i-piu"/></svg></a>
     <a class="magnete" href="#metodo">Metodo<svg class="segno-sotto"><use href="#i-piu"/></svg></a>
-    <a class="magnete" href="#contatti">Contatti<svg class="segno-sotto"><use href="#i-piu"/></svg></a>
+    <a class="magnete" href="#selezione">Selezione<svg class="segno-sotto"><use href="#i-piu"/></svg></a>
+    <a class="magnete testata__cta" href="#richiesta"><span class="pillola pillola--oro pillola--piccola"><span class="riempi"></span><span class="testo">Richiedi personale</span></span></a>
   </nav>
 </header>
 
@@ -98,15 +99,13 @@
       <a href="#inizio">Inizio</a>
       <a href="#figure">Figure</a>
       <a href="#metodo">Metodo</a>
-      <a href="#contatti">Contatti</a>
+      <a href="#selezione">Selezione</a>
+      <a href="#richiesta">Richiedi personale</a>
     </nav>
   </div>
   <div class="menu__piede">
     <span class="piccolo">Contatti</span>
-    <!-- TODO: numero e mail veri -->
-    <a href="https://wa.me/390000000000" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://www.instagram.com/prontostaffcatering" target="_blank" rel="noopener">Instagram</a>
-    <a href="mailto:info@prontostaff.it">Email</a>
   </div>
 </aside>
 
@@ -134,6 +133,7 @@
         <svg><use href="#i-giu"/></svg>
         <span>Staff per catering,</span>
         <span>fiere ed eventi</span>
+        <a class="magnete ruolo-apertura__cta" href="#richiesta"><span class="pillola pillola--oro"><span class="riempi"></span><span class="testo">Richiedi personale per il tuo evento</span></span></a>
       </div>
 
       <div class="nome-scorre" aria-hidden="true">
@@ -149,71 +149,75 @@
   <div class="contenuto">
 
     <section class="intro" aria-label="Chi siamo">
-      <p class="intro__frase">Voi pensate all'evento. Al personale aggiuntivo pensiamo noi. Camerieri, bartender, facchini e hostess per <em>catering e banqueting</em>, anche last minute.</p>
+      <p class="intro__frase">Forniamo personale aggiuntivo ai <em>catering e banqueting</em>: camerieri, bartender, facchini e hostess, quando il vostro staff da solo non basta. Voi pensate all'evento, al personale in più pensiamo noi.</p>
       <div class="intro__lato">
-        <p>Supporto operativo a catering e banqueting: individuiamo e organizziamo il personale per i vostri eventi, con un interlocutore dedicato.</p>
-        <a class="magnete intro__tondo" href="#metodo"><span class="tondo"><span class="riempi"></span><span class="testo">Il metodo</span></span></a>
+        <p>Un interlocutore dedicato organizza e coordina le persone in più, anche con poco preavviso. Voi mantenete il rapporto con il cliente.</p>
+        <a class="magnete intro__tondo" href="#richiesta"><span class="tondo"><span class="riempi"></span><span class="testo">Richiedi<br>personale</span></span></a>
+      </div>
+    </section>
+
+
+    <section class="evento" aria-labelledby="evento-titolo">
+      <h2 class="evento__titolo" id="evento-titolo">Accettate un evento in più. <span>Anche quando il personale non basta.</span></h2>
+      <div class="evento__casi">
+        <article class="caso">
+          <svg class="caso__segno"><use href="#i-piu"/></svg>
+          <h3>Più eventi nello stesso giorno</h3>
+          <p>Un matrimonio a pranzo e una cena aziendale la sera. Coprite tutti e due senza togliere persone a nessuno dei servizi.</p>
+        </article>
+        <article class="caso">
+          <svg class="caso__segno"><use href="#i-piu"/></svg>
+          <h3>Grandi eventi</h3>
+          <p>Gala, congressi, fiere: quando gli ospiti sono tanti e il vostro staff da solo non basta, aggiungiamo le persone che servono.</p>
+        </article>
+        <article class="caso">
+          <svg class="caso__segno"><use href="#i-piu"/></svg>
+          <h3>I picchi di stagione</h3>
+          <p>Maggio, giugno, dicembre. Gestite i periodi pieni senza dover assumere in modo stabile per tutto l'anno.</p>
+        </article>
       </div>
     </section>
 
     <section class="figure" id="figure" aria-label="Le figure">
       <span class="piccolo figure__etichetta">Le figure</span>
       <div class="figure__elenco">
-        <a class="voce" href="#contatti" data-indice="0">
+        <a class="voce" href="#richiesta" data-indice="0">
           <span class="voce__foto" style="background:#1d1c19"><img src="assets/img/viale.webp" alt="" width="1199" height="1499" loading="lazy"></span>
           <h3>Camerieri</h3><p>Sala, buffet e cene di gala</p>
         </a>
-        <a class="voce" href="#contatti" data-indice="1">
-          <span class="voce__foto" style="background:#e7e0d3"><img src="assets/img/cocktail.webp" alt="" width="900" height="1600" loading="lazy"></span>
+        <a class="voce" href="#richiesta" data-indice="1">
+          <span class="voce__foto" style="background:#e7e0d3"><img src="assets/img/bartender.webp" alt="" width="1080" height="1350" loading="lazy"></span>
           <h3>Bartender</h3><p>Banco bar, aperitivi e open bar</p>
         </a>
-        <a class="voce" href="#contatti" data-indice="2">
-          <span class="voce__foto" style="background:#e9b83c"><img src="assets/img/sala.webp" alt="" width="857" height="1200" loading="lazy"></span>
-          <h3>Facchini</h3><p>Allestimento e logistica</p>
+        <a class="voce" href="#richiesta" data-indice="2">
+          <span class="voce__foto" style="background:#e9b83c"><img src="assets/img/facchino.webp" alt="" width="960" height="1280" loading="lazy"></span>
+          <h3>Facchini</h3><p>Allestimento, logistica e hotel</p>
         </a>
-        <a class="voce" href="#contatti" data-indice="3">
-          <span class="voce__foto" style="background:#2a2925"><img src="assets/img/champagne.webp" alt="" width="1039" height="1446" loading="lazy"></span>
+        <a class="voce" href="#richiesta" data-indice="3">
+          <span class="voce__foto" style="background:#2a2925"><img src="assets/img/hostess.webp" alt="" width="1200" height="1600" loading="lazy"></span>
           <h3>Hostess</h3><p>Accoglienza, fiere e congressi</p>
         </a>
       </div>
       <div class="figure__altro">
-        <a class="magnete" href="#contatti"><span class="pillola"><span class="riempi"></span><span class="testo">Componete la squadra<sup>4</sup></span></span></a>
+        <a class="magnete" href="#richiesta"><span class="pillola"><span class="riempi"></span><span class="testo">Componete la squadra<sup>4</sup></span></span></a>
       </div>
     </section>
 
     <div class="anteprima" aria-hidden="true">
       <div class="anteprima__binario">
         <div class="anteprima__quadro" style="background:#1d1c19"><img src="assets/img/viale.webp" alt="" width="1199" height="1499" loading="lazy"></div>
-        <div class="anteprima__quadro" style="background:#e7e0d3"><img src="assets/img/cocktail.webp" alt="" width="900" height="1600" loading="lazy"></div>
-        <div class="anteprima__quadro" style="background:#e9b83c"><img src="assets/img/sala.webp" alt="" width="857" height="1200" loading="lazy"></div>
-        <div class="anteprima__quadro" style="background:#2a2925"><img src="assets/img/champagne.webp" alt="" width="1039" height="1446" loading="lazy"></div>
+        <div class="anteprima__quadro" style="background:#e7e0d3"><img src="assets/img/bartender.webp" alt="" width="1080" height="1350" loading="lazy"></div>
+        <div class="anteprima__quadro" style="background:#e9b83c"><img src="assets/img/facchino.webp" alt="" width="960" height="1280" loading="lazy"></div>
+        <div class="anteprima__quadro" style="background:#2a2925"><img src="assets/img/hostess.webp" alt="" width="1200" height="1600" loading="lazy"></div>
       </div>
     </div>
     <div class="cursore" aria-hidden="true"></div>
     <div class="cursore-testo" aria-hidden="true">Chiedi</div>
 
-    <section class="file" aria-label="Gli eventi">
-      <div class="fila fila--a">
-        <div class="tessera tessera--osso"><img src="assets/img/strada.webp" alt="Camerieri servono calici e dolci all'aperto" width="710" height="1093" loading="lazy"></div>
-        <div class="tessera tessera--parola tessera--oro"><span><svg><use href="#i-piu"/></svg>Matrimoni</span></div>
-        <div class="tessera"><img src="assets/img/arco.webp" alt="Servizio di vino in un cortile di pietra" width="857" height="1200" loading="lazy"></div>
-        <div class="tessera tessera--parola tessera--scuro"><span><svg style="color:#e9b83c"><use href="#i-piu"/></svg>Cene di gala</span></div>
-      </div>
-      <div class="fila fila--b">
-        <div class="tessera tessera--parola tessera--scuro"><span><svg style="color:#e9b83c"><use href="#i-piu"/></svg>Congressi e fiere</span></div>
-        <div class="tessera tessera--oro"><img src="assets/img/champagne.webp" alt="Vassoi di champagne e cocktail alla menta" width="1039" height="1446" loading="lazy"></div>
-        <div class="tessera tessera--parola tessera--osso"><span><svg><use href="#i-piu"/></svg>Coffee break</span></div>
-        <div class="tessera"><img src="assets/img/viale.webp" alt="Camerieri schierati lungo un viale alberato" width="1199" height="1499" loading="lazy"></div>
-      </div>
-    </section>
-
-    <section class="metodo" id="metodo" aria-labelledby="metodo-titolo">
-      <div class="metodo__capo">
-        <h2 id="metodo-titolo">Dalla richiesta<br><span>al servizio.</span></h2>
-        <p>Voi seguite ogni dettaglio e il rapporto con i clienti. Noi vi diamo un interlocutore dedicato al coordinamento del personale aggiuntivo.</p>
-      </div>
+    <section class="spazio-rinforzo" aria-label="Il rinforzo">
       <div class="rinforzo" aria-label="Il vostro staff con tre persone in più di ProntoStaff+">
-        <p class="rinforzo__frase">Non ci sostituiamo al vostro staff. <span>Lo rinforziamo.</span></p>
+        <h2 class="rinforzo__frase">Non ci sostituiamo al vostro staff. <span>Lo rinforziamo.</span></h2>
+        <p class="rinforzo__testo">Il vostro personale resta il cuore del servizio: conosce i vostri clienti, i vostri standard, il vostro modo di lavorare. Noi aggiungiamo le persone che mancano, solo quando servono, e lavorano seguendo le vostre indicazioni.</p>
         <svg class="rinforzo__squadra" viewBox="0 -70 1000 370" aria-hidden="true">
           <line class="rinforzo__suolo" x1="0" y1="291" x2="1000" y2="291"/>
           <g transform="translate(50 0)"><g class="omino omino--staff"><path d="M-36 290 L-36 138 Q-36 94 0 94 Q36 94 36 138 L36 290 L5 290 L5 206 L-5 206 L-5 290 Z"/><circle cx="0" cy="48" r="25"/><path class="farfallino" d="M-12 106 L0 112 L12 106 L12 120 L0 114 L-12 120 Z"/></g></g>
@@ -235,6 +239,56 @@
           <span class="rinforzo__voce"><svg viewBox="-40 0 80 300" class="mini mini--oro"><path d="M-36 290 L-36 138 Q-36 94 0 94 Q36 94 36 138 L36 290 L5 290 L5 206 L-5 206 L-5 290 Z"/><circle cx="0" cy="48" r="25"/></svg>Il rinforzo ProntoStaff+, quando serve</span>
         </div>
       </div>
+    </section>
+
+    <section class="selezione" id="selezione" aria-labelledby="selezione-titolo">
+      <div class="selezione__capo">
+        <h2 id="selezione-titolo">Le persone giuste, <span>non solo il numero giusto.</span></h2>
+        <p>Ogni squadra la componiamo in base all'evento. Le persone le scegliamo guardando quattro cose.</p>
+      </div>
+      <div class="selezione__criteri">
+        <article><h3>Esperienza</h3><p>Chi ha già lavorato in sala, al bar o in accoglienza, in eventi simili al vostro.</p></article>
+        <article><h3>Affidabilità</h3><p>Puntualità, presenza confermata e continuità: chi diciamo che arriva, arriva.</p></article>
+        <article><h3>Presentazione</h3><p>Cura della divisa e dell'aspetto, modo di stare tra gli ospiti.</p></article>
+        <article><h3>Tipo di servizio</h3><p>Una cena di gala non è un coffee break: scegliamo in base a quello che ci chiedete.</p></article>
+      </div>
+    </section>
+
+    <section class="servizi" aria-labelledby="servizi-titolo">
+      <div class="servizi__capo">
+        <h2 id="servizi-titolo">Già al lavoro, <span>evento dopo evento.</span></h2>
+        <p>Alcuni dei servizi in cui le nostre persone hanno lavorato.</p>
+      </div>
+      <div class="servizi__griglia">
+        <figure class="scatto scatto--alto"><img src="assets/img/bartender.webp" alt="Bartender versa un cocktail al banco" width="1080" height="1350" loading="lazy"><figcaption>Bar</figcaption></figure>
+        <figure class="scatto"><img src="assets/img/viale.webp" alt="Camerieri con vassoi di calici lungo un viale" width="1199" height="1499" loading="lazy"><figcaption>Ricevimento all'aperto</figcaption></figure>
+        <figure class="scatto scatto--alto"><img src="assets/img/hostess.webp" alt="Due hostess con le liste degli ospiti" width="1200" height="1600" loading="lazy"><figcaption>Accoglienza</figcaption></figure>
+        <figure class="scatto"><img src="assets/img/facchino.webp" alt="Facchino con il carrello dei bagagli nella hall di un hotel" width="960" height="1280" loading="lazy"><figcaption>Hotel</figcaption></figure>
+        <figure class="scatto scatto--alto"><img src="assets/img/arco.webp" alt="Servizio di vino in un cortile di pietra" width="857" height="1200" loading="lazy"><figcaption>Aperitivo</figcaption></figure>
+        <figure class="scatto"><img src="assets/img/sala.webp" alt="Tavola apparecchiata e due camerieri pronti al servizio" width="857" height="1200" loading="lazy"><figcaption>Cena placée</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="file" aria-label="Gli eventi">
+      <div class="fila fila--a">
+        <div class="tessera tessera--osso"><img src="assets/img/strada.webp" alt="Camerieri servono calici e dolci all'aperto" width="710" height="1093" loading="lazy"></div>
+        <div class="tessera tessera--parola tessera--oro"><span><svg><use href="#i-piu"/></svg>Matrimoni</span></div>
+        <div class="tessera"><img src="assets/img/arco.webp" alt="Servizio di vino in un cortile di pietra" width="857" height="1200" loading="lazy"></div>
+        <div class="tessera tessera--parola tessera--scuro"><span><svg style="color:#e9b83c"><use href="#i-piu"/></svg>Cene di gala</span></div>
+      </div>
+      <div class="fila fila--b">
+        <div class="tessera tessera--parola tessera--scuro"><span><svg style="color:#e9b83c"><use href="#i-piu"/></svg>Congressi e fiere</span></div>
+        <div class="tessera tessera--oro"><img src="assets/img/champagne.webp" alt="Vassoi di champagne e cocktail alla menta" width="1039" height="1446" loading="lazy"></div>
+        <div class="tessera tessera--parola tessera--osso"><span><svg><use href="#i-piu"/></svg>Coffee break</span></div>
+        <div class="tessera"><img src="assets/img/viale.webp" alt="Camerieri schierati lungo un viale alberato" width="1199" height="1499" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="metodo" id="metodo" aria-labelledby="metodo-titolo">
+      <div class="metodo__capo">
+        <h2 id="metodo-titolo">Dalla richiesta<br><span>al servizio.</span></h2>
+        <p>Voi seguite ogni dettaglio e il rapporto con i clienti. Noi vi diamo un interlocutore dedicato al coordinamento del personale aggiuntivo.</p>
+      </div>
       <div class="passi">
         <article class="passo"><span class="passo__linea"></span><svg class="passo__segno"><use href="#i-piu"/></svg><h3>La richiesta</h3><p>Data, luogo, tipo di servizio e quante persone vi servono. Anche con poco preavviso.</p></article>
         <article class="passo"><span class="passo__linea"></span><svg class="passo__segno"><use href="#i-piu"/></svg><h3>La squadra</h3><p>Individuiamo e organizziamo il personale in base al servizio, non solo al numero.</p></article>
@@ -254,14 +308,44 @@
       </div>
       <div class="piede__riga">
         <div class="piede__chiama magnete">
-          <a class="tondo tondo--nero" href="https://wa.me/390000000000?text=Buongiorno%20ProntoStaff%2B%2C%20vorrei%20informazioni%20sul%20personale%20per%20un%20evento." target="_blank" rel="noopener"><span class="riempi"></span><span class="testo">Parliamone</span></a>
+          <a class="tondo tondo--nero" href="#richiesta"><span class="riempi"></span><span class="testo">Richiedi</span></a>
         </div>
       </div>
-      <div class="piede__contatti">
-        <a class="magnete" href="mailto:info@prontostaff.it"><span class="pillola"><span class="riempi"></span><span class="testo">info@prontostaff.it</span></span></a>
-        <a class="magnete" href="tel:+390000000000"><span class="pillola"><span class="riempi"></span><span class="testo">+39 000 000 0000</span></span></a>
-      </div>
-    </div>
+      <form class="richiesta" id="richiesta" novalidate>
+        <h3 class="richiesta__titolo">Richiedi personale per il tuo prossimo evento</h3>
+        <p class="richiesta__nota">Indicaci data, luogo e servizio: ti rispondiamo con la squadra che possiamo mettere a disposizione.</p>
+        <div class="richiesta__campi">
+          <label class="campo"><span>Catering o azienda</span><input name="azienda" autocomplete="organization" required></label>
+          <label class="campo"><span>Data dell'evento</span><input name="data" type="date" required></label>
+          <label class="campo"><span>Luogo</span><input name="luogo" placeholder="Città o location" required></label>
+          <label class="campo"><span>Tipo di servizio</span>
+            <select name="servizio" required>
+              <option value="">Scegli</option>
+              <option>Matrimonio</option>
+              <option>Cena di gala</option>
+              <option>Evento aziendale</option>
+              <option>Congresso o fiera</option>
+              <option>Coffee break o meeting</option>
+              <option>Servizio a domicilio</option>
+              <option>Altro</option>
+            </select>
+          </label>
+          <fieldset class="campo campo--figure">
+            <legend>Persone richieste</legend>
+            <label><span>Camerieri</span><input name="camerieri" type="number" min="0" inputmode="numeric" placeholder="0"></label>
+            <label><span>Bartender</span><input name="bartender" type="number" min="0" inputmode="numeric" placeholder="0"></label>
+            <label><span>Facchini</span><input name="facchini" type="number" min="0" inputmode="numeric" placeholder="0"></label>
+            <label><span>Hostess</span><input name="hostess" type="number" min="0" inputmode="numeric" placeholder="0"></label>
+          </fieldset>
+          <label class="campo"><span>Orari</span><input name="orari" placeholder="Es. 18:00 – 01:00"></label>
+          <label class="campo"><span>Il tuo recapito</span><input name="recapito" autocomplete="tel" placeholder="Telefono o email" required></label>
+          <label class="campo campo--largo"><span>Note</span><textarea name="note" rows="3" placeholder="Numero di ospiti, divisa, altre informazioni utili"></textarea></label>
+        </div>
+        <div class="richiesta__invio">
+          <button class="magnete" type="submit"><span class="pillola pillola--nera"><span class="riempi"></span><span class="testo">Invia la richiesta</span></span></button>
+          <p class="richiesta__esito" aria-live="polite"></p>
+        </div>
+      </form>
     <div class="piede__fondo">
       <div class="piede__gruppi">
         <div class="piede__gruppo"><span class="piccolo">Edizione</span><span>2026 © ProntoStaff+</span></div>
@@ -271,7 +355,6 @@
         <span class="piccolo">Social</span>
         <div class="piede__social">
           <a class="magnete" href="https://www.instagram.com/prontostaffcatering" target="_blank" rel="noopener">Instagram<svg class="segno-sotto"><use href="#i-piu"/></svg></a>
-          <a class="magnete" href="https://wa.me/390000000000" target="_blank" rel="noopener">WhatsApp<svg class="segno-sotto"><use href="#i-piu"/></svg></a>
         </div>
       </div>
     </div>
@@ -310,5 +393,6 @@
 <script src="assets/js/vendor/lenis.min.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/walker.js"></script>
+<script src="assets/js/richiesta.js"></script>
 </body>
 </html>
