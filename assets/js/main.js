@@ -676,7 +676,7 @@
     });
 
     // titoli delle sezioni nuove
-    $$('.evento__titolo, .selezione__capo h2, .servizi__capo h2').forEach(function (el) {
+    $$('.evento__titolo, .selezione__capo h2, .file__capo h2').forEach(function (el) {
       SplitText.create(el, {
         type: 'lines',
         mask: 'lines',
@@ -692,7 +692,7 @@
         }
       });
     });
-    $$('.selezione__capo p, .servizi__capo p').forEach(function (el) {
+    $$('.selezione__capo p, .file__capo p').forEach(function (el) {
       gsap.from(el, { opacity: 0, duration: 1.2, scrollTrigger: { trigger: el, start: 'top 90%' } });
     });
     gsap.from('.evento .caso', {
@@ -720,20 +720,6 @@
       stagger: 0.08,
       ease: 'power3.out',
       scrollTrigger: { trigger: '.selezione__criteri', start: 'top 88%' }
-    });
-    $$('.scatto').forEach(function (el) {
-      gsap.from(el, {
-        clipPath: 'inset(100% 0% 0% 0% round 6px)',
-        duration: 1.3,
-        ease: 'expo.inOut',
-        scrollTrigger: { trigger: el, start: 'top 92%' }
-      });
-      gsap.from(el.querySelector('img'), {
-        scale: 1.3,
-        duration: 1.6,
-        ease: 'expo.out',
-        scrollTrigger: { trigger: el, start: 'top 92%' }
-      });
     });
     gsap.from('.richiesta__titolo, .richiesta__nota, .campo, .richiesta__invio', {
       y: 24,
