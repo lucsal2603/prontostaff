@@ -1718,3 +1718,7 @@ h2.rinforzo__frase {
   width: 56%;
   height: 74%;
 }
+.passo h3 {
+  font-size: clamp(20px, 1.6vw, 28px);
+  white-space: nowrap;
+}
