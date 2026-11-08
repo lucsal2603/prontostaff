@@ -1774,3 +1774,43 @@ h2.rinforzo__frase {
     margin-top: 16px;
   }
 }
+
+.puntatore {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  display: none;
+}
+.con-puntatore .puntatore {
+  display: block;
+}
+.puntatore svg {
+  position: absolute;
+  left: -14px;
+  top: -14px;
+  width: 28px;
+  height: 28px;
+  fill: var(--oro);
+  filter: drop-shadow(0 0 6px rgba(233, 184, 60, 0.55));
+  transition: fill 0.3s var(--curva);
+}
+.puntatore--scuro svg {
+  fill: var(--nero);
+  filter: none;
+}
+.con-puntatore,
+.con-puntatore * {
+  cursor: none !important;
+}
+.con-puntatore input,
+.con-puntatore textarea,
+.con-puntatore select {
+  cursor: text !important;
+}
+.con-puntatore select {
+  cursor: pointer !important;
+}
