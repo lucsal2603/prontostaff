@@ -788,11 +788,11 @@
     );
     gsap.fromTo(
       '.piede__dentro, .piede__fondo',
-      { yPercent: -22 },
+      { y: -80 },
       {
-        yPercent: 0,
+        y: 0,
         ease: 'none',
-        scrollTrigger: { trigger: '.piede', start: 'top bottom', end: 'bottom bottom', scrub: true }
+        scrollTrigger: { trigger: '.piede', start: 'top bottom', end: 'top top', scrub: true }
       }
     );
     gsap.fromTo(

@@ -4,7 +4,7 @@
   'use strict';
 
   var CONTATTI = {
-    whatsapp: '', // es. '393331234567'
+    whatsapp: '393515471414',
     email: '',
     instagram: 'prontostaffcatering'
   };
