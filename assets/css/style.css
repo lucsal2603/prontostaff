@@ -1742,3 +1742,35 @@ h2.rinforzo__frase {
   height: 100%;
   display: block;
 }
+
+@media (max-width: 760px) {
+  .apertura {
+    height: 100vh;
+    height: 100svh;
+    min-height: 520px;
+  }
+  .nome-scorre {
+    bottom: 10px;
+  }
+  .nome-scorre__fila p {
+    font-size: 26vw;
+  }
+  .luogo {
+    bottom: calc(26vw * 1.08 + 26px);
+  }
+  .ruolo-apertura {
+    top: 104px;
+  }
+}
+@media (max-width: 760px) and (max-height: 640px) {
+  .ruolo-apertura {
+    top: 88px;
+    font-size: 22px;
+  }
+  .ruolo-apertura svg {
+    margin-bottom: 14px;
+  }
+  .ruolo-apertura__cta {
+    margin-top: 16px;
+  }
+}
