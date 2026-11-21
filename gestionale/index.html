@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0b0b0a">
+<title>ProntoStaff+ · Gestionale</title>
+<link rel="icon" href="../assets/img/icona.png" type="image/png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="piu" viewBox="0 0 20 20"><path d="M8.9 1.5h2.2v7.4h7.4v2.2h-7.4v7.4H8.9v-7.4H1.5V8.9h7.4z" fill="currentColor"/></symbol>
+</svg>
+
+<main class="schermo schermo--accesso" id="accesso" hidden>
+  <form class="scheda" id="modulo-accesso" autocomplete="on">
+    <div class="marchio"><svg class="marchio__piu"><use href="#piu"/></svg><span>Pronto<b>Staff+</b></span></div>
+    <h1>Gestionale</h1>
+    <p class="nota">Accesso riservato.</p>
+    <label class="campo"><span>Utente</span><input name="utente" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>
+    <label class="campo"><span>Password</span><input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="pulsante" type="submit">Entra</button>
+    <p class="esito" role="alert"></p>
+  </form>
+</main>
+
+<main class="schermo schermo--accesso" id="configura" hidden>
+  <form class="scheda scheda--larga" id="modulo-configura" autocomplete="off">
+    <div class="marchio"><svg class="marchio__piu"><use href="#piu"/></svg><span>Pronto<b>Staff+</b></span></div>
+    <h1>Prima configurazione</h1>
+    <p class="nota">Serve una volta sola. Il token di GitHub viene cifrato con utente e password e salvato nel sito: senza la password nessuno può usarlo.</p>
+    <label class="campo"><span>Token di GitHub</span><input name="token" type="password" autocomplete="off" spellcheck="false" required placeholder="github_pat_…"></label>
+    <label class="campo"><span>Utente</span><input name="utente" value="mura" autocapitalize="off" spellcheck="false" required></label>
+    <label class="campo"><span>Password</span>
+      <span class="riga"><input name="password" type="text" autocomplete="new-password" spellcheck="false" required minlength="14"><button class="pulsante pulsante--vuoto" type="button" data-genera>Genera</button></span>
+    </label>
+    <p class="nota nota--piccola">Almeno 14 caratteri. Con «Genera» ne crei una sicura: copiala e salvala prima di continuare.</p>
+    <button class="pulsante" type="submit">Salva e attiva</button>
+    <p class="esito" role="alert"></p>
+  </form>
+</main>
+
+<div class="app" id="app" hidden>
+  <header class="testata">
+    <div class="marchio"><svg class="marchio__piu"><use href="#piu"/></svg><span>Pronto<b>Staff+</b></span><em>Gestionale</em></div>
+    <div class="testata__azioni">
+      <a class="pulsante pulsante--vuoto pulsante--piccolo" href="../" target="_blank" rel="noopener">Apri il sito</a>
+      <button class="pulsante pulsante--vuoto pulsante--piccolo" type="button" id="esci">Esci</button>
+    </div>
+  </header>
+  <nav class="menu" id="menu" aria-label="Sezioni"></nav>
+  <section class="contenuto" id="contenuto" aria-live="polite"></section>
+  <footer class="barra" id="barra">
+    <span class="barra__stato" id="stato">Nessuna modifica</span>
+    <div class="barra__azioni">
+      <button class="pulsante pulsante--vuoto" type="button" id="annulla" disabled>Annulla</button>
+      <button class="pulsante pulsante--vuoto" type="button" id="anteprima" disabled>Anteprima</button>
+      <button class="pulsante" type="button" id="pubblica" disabled>Pubblica</button>
+    </div>
+  </footer>
+</div>
+
+<div class="avviso" id="avviso" role="status"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
