@@ -10,17 +10,16 @@ import {
   estraiGoogle,
   applicaGoogle
 } from './contenuto.js';
-import { creaGithub, SITO } from './github.js';
-import { cifra, decifra, generaPassword } from './cripto.js';
+import { archivio, controllaAccesso, salvaAccesso, fotoSalvata, azzera } from './demo.js';
 
 const $ = (s, c = document) => c.querySelector(s);
-const FILE_CHIAVE = 'gestionale/chiave.json';
+const SITO = '../';
 const FILE_JS = 'assets/js/richiesta.js';
 const MINUTI_INATTIVITA = 30;
 
-let github = null;
-let sessione = null; // { utente, token }
-let orig = null; // contenuti come sono ora sul sito
+const github = archivio;
+let sessione = null; // { utente }
+let orig = null; // contenuti come sono ora
 let mod = nuoveModifiche();
 let vista = 'apertura';
 
@@ -36,6 +35,19 @@ function numeroModifiche() {
   );
 }
 
+function generaPassword() {
+  const alfabeto = 'abcdefghjkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const r = crypto.getRandomValues(new Uint32Array(20));
+  return Array.from(r, (n) => alfabeto[n % alfabeto.length])
+    .join('')
+    .match(/.{5}/g)
+    .join('-');
+}
+
+function srcFoto(src) {
+  return fotoSalvata(src) || SITO + src;
+}
+
 // --- avvisi ------------------------------------------------------------------
 
 let timerAvviso;
@@ -49,37 +61,15 @@ function avviso(testo, errore = false) {
 }
 
 function erroreGithub(e) {
-  if (e.stato === 401) return 'Il token di GitHub non è più valido. Aggiornalo in Impostazioni.';
-  if (e.stato === 403 || e.stato === 404)
-    return 'Il token di GitHub non ha il permesso di modificare il sito. Aggiornalo in Impostazioni.';
-  if (e.stato === 409 || e.stato === 422)
-    return 'Il sito è stato aggiornato nel frattempo. Riprova a pubblicare.';
   if (e instanceof TypeError) return 'Connessione assente. Controlla internet e riprova.';
-  return 'Qualcosa non ha funzionato (' + (e.message || e) + '). Riprova.';
+  return e.message || 'Qualcosa non ha funzionato. Riprova.';
 }
 
-// --- avvio, accesso e configurazione --------------------------------------------
+// --- accesso ---------------------------------------------------------------------
 
-async function leggiChiave() {
-  const r = await fetch('chiave.json', { cache: 'no-store' });
-  if (r.status === 404) return null;
-  if (!r.ok) throw new Error('chiave ' + r.status);
-  return r.json();
-}
-
-let chiaveFile = null;
 let tentativi = 0;
 
-async function avvio() {
-  try {
-    chiaveFile = await leggiChiave();
-  } catch (e) {
-    chiaveFile = undefined;
-  }
-  if (chiaveFile === null) {
-    $('#configura').hidden = false;
-    return;
-  }
+function avvio() {
   $('#accesso').hidden = false;
   $('#modulo-accesso [name=utente]').focus();
 }
@@ -89,20 +79,16 @@ $('#modulo-accesso').addEventListener('submit', async (e) => {
   const f = e.currentTarget;
   const esito = $('.esito', f);
   const pulsante = $('button[type=submit]', f);
-  if (!chiaveFile) {
-    esito.textContent = 'Non riesco a raggiungere il sito. Controlla la connessione e ricarica la pagina.';
-    return;
-  }
   pulsante.disabled = true;
   pulsante.innerHTML = '<span class="attesa"></span>Verifica';
   esito.textContent = '';
   // ogni tentativo sbagliato fa aspettare un po' di più
-  if (tentativi > 2) await new Promise((r) => setTimeout(r, Math.min(tentativi, 10) * 1000));
+  await new Promise((r) => setTimeout(r, tentativi > 2 ? Math.min(tentativi, 10) * 1000 : 500));
   const utente = f.utente.value.trim();
-  const segreto = await decifra(chiaveFile, utente, f.password.value);
+  const ok = await controllaAccesso(utente, f.password.value);
   pulsante.disabled = false;
   pulsante.textContent = 'Entra';
-  if (!segreto || !segreto.token) {
+  if (!ok) {
     tentativi++;
     esito.textContent = 'Utente o password non corretti.';
     f.password.value = '';
@@ -112,54 +98,10 @@ $('#modulo-accesso').addEventListener('submit', async (e) => {
     f.classList.add('trema');
     return;
   }
-  sessione = { utente, token: segreto.token };
-  github = creaGithub(segreto.token);
+  sessione = { utente };
   f.password.value = '';
   $('#accesso').hidden = true;
   await entra();
-});
-
-$('#modulo-configura [data-genera]').addEventListener('click', () => {
-  $('#modulo-configura [name=password]').value = generaPassword();
-});
-
-$('#modulo-configura').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const f = e.currentTarget;
-  const esito = $('.esito', f);
-  esito.className = 'esito';
-  const token = f.token.value.trim();
-  const utente = f.utente.value.trim();
-  const password = f.password.value;
-  if (password.length < 14) {
-    esito.textContent = 'La password deve avere almeno 14 caratteri.';
-    return;
-  }
-  const pulsante = $('button[type=submit]', f);
-  pulsante.disabled = true;
-  pulsante.innerHTML = '<span class="attesa"></span>Controllo il token';
-  try {
-    const g = creaGithub(token);
-    if (!(await g.verifica())) throw Object.assign(new Error('permessi'), { stato: 403 });
-    const cifrato = await cifra({ token }, utente, password);
-    await g.pubblica(
-      { [FILE_CHIAVE]: { testo: JSON.stringify(cifrato, null, 1) + '\n' } },
-      'Gestionale: configurazione accesso'
-    );
-    esito.className = 'esito esito--ok';
-    esito.textContent = 'Fatto. Tra un paio di minuti ricarica questa pagina ed entra con utente e password.';
-    f.token.value = '';
-    pulsante.textContent = 'Attivato';
-  } catch (err) {
-    pulsante.disabled = false;
-    pulsante.textContent = 'Salva e attiva';
-    esito.textContent =
-      err.stato === 401
-        ? 'Il token non è valido.'
-        : err.stato
-          ? 'Il token non può modificare questo sito: controlla i permessi (Contents: Read and write).'
-          : erroreGithub(err);
-  }
 });
 
 // --- dentro ----------------------------------------------------------------------
@@ -377,7 +319,7 @@ function mostraImmagini() {
     const card = document.createElement('div');
     card.className = 'foto' + (mod.immagini[img.slot] ? ' cambiata' : '');
     card.innerHTML = `<div class="foto__img"><img alt=""></div><div class="foto__piede"><span class="foto__nome"></span><div class="foto__azioni"><label class="pulsante pulsante--vuoto pulsante--piccolo">Cambia foto<input type="file" accept="image/*"></label></div></div>`;
-    $('img', card).src = mod.immagini[img.slot] ? mod.immagini[img.slot].dataUrl : SITO + img.src;
+    $('img', card).src = mod.immagini[img.slot] ? mod.immagini[img.slot].dataUrl : srcFoto(img.src);
     $('.foto__nome', card).textContent = img.etichetta;
     if (mod.immagini[img.slot]) {
       const a = document.createElement('button');
@@ -476,9 +418,8 @@ function mostraImpostazioni() {
       <h3 style="margin:0;font-weight:400;font-size:20px">Cambia utente o password</h3>
       <label class="campo"><span>Password attuale</span><input name="attuale" type="password" autocomplete="current-password" required></label>
       <label class="campo"><span>Utente</span><input name="utente" autocomplete="username" autocapitalize="off" required></label>
-      <label class="campo"><span>Nuova password</span><span class="riga"><input name="nuova" type="text" autocomplete="new-password" minlength="14" required spellcheck="false"><button class="pulsante pulsante--vuoto" type="button" data-genera>Genera</button></span></label>
-      <p class="nota nota--piccola">Almeno 14 caratteri. Salvala prima di confermare.</p>
-      <label class="campo"><span>Token di GitHub (solo se va sostituito)</span><input name="token" type="password" autocomplete="off" spellcheck="false" placeholder="lascia vuoto per tenere quello attuale"></label>
+      <label class="campo"><span>Nuova password</span><span class="riga"><input name="nuova" type="text" autocomplete="new-password" minlength="10" required spellcheck="false"><button class="pulsante pulsante--vuoto" type="button" data-genera>Genera</button></span></label>
+      <p class="nota nota--piccola">Almeno 10 caratteri. Salvala prima di confermare.</p>
       <div><button class="pulsante" type="submit">Salva</button></div>
       <p class="esito" role="alert"></p>
     </form>`
@@ -490,42 +431,37 @@ function mostraImpostazioni() {
     e.preventDefault();
     const esito = $('.esito', f);
     esito.className = 'esito';
-    const verificato = await decifra(chiaveFile, sessione.utente, f.attuale.value);
-    if (!verificato) {
+    if (!(await controllaAccesso(sessione.utente, f.attuale.value))) {
       esito.textContent = 'La password attuale non è corretta.';
       return;
     }
-    if (f.nuova.value.length < 14) {
-      esito.textContent = 'La nuova password deve avere almeno 14 caratteri.';
+    if (f.nuova.value.length < 10) {
+      esito.textContent = 'La nuova password deve avere almeno 10 caratteri.';
       return;
     }
-    const btn = $('button[type=submit]', f);
-    btn.disabled = true;
-    btn.innerHTML = '<span class="attesa"></span>Salvo';
-    try {
-      let token = sessione.token;
-      if (f.token.value.trim()) {
-        const g = creaGithub(f.token.value.trim());
-        if (!(await g.verifica())) throw Object.assign(new Error('permessi'), { stato: 403 });
-        token = f.token.value.trim();
-      }
-      const nuovo = await cifra({ token }, f.utente.value.trim(), f.nuova.value);
-      await creaGithub(token).pubblica(
-        { [FILE_CHIAVE]: { testo: JSON.stringify(nuovo, null, 1) + '\n' } },
-        'Gestionale: aggiornamento accesso'
-      );
-      chiaveFile = nuovo;
-      sessione = { utente: f.utente.value.trim(), token };
-      github = creaGithub(token);
-      f.reset();
-      f.utente.value = sessione.utente;
-      esito.className = 'esito esito--ok';
-      esito.textContent = 'Salvato. Dalla prossima volta entra con i nuovi dati.';
-    } catch (err) {
-      esito.textContent = erroreGithub(err);
-    }
-    btn.disabled = false;
-    btn.textContent = 'Salva';
+    await salvaAccesso(f.utente.value.trim(), f.nuova.value);
+    sessione = { utente: f.utente.value.trim() };
+    f.reset();
+    f.utente.value = sessione.utente;
+    esito.className = 'esito esito--ok';
+    esito.textContent = 'Salvato. Dalla prossima volta entra con i nuovi dati.';
+  });
+
+  c.insertAdjacentHTML(
+    'beforeend',
+    `<div class="gruppo" style="margin-top:48px">
+      <h3 style="margin:0;font-weight:400;font-size:20px">Ripristina i contenuti</h3>
+      <p class="nota">Cancella tutte le modifiche salvate e torna ai testi e alle foto originali.</p>
+      <div><button class="pulsante pulsante--pericolo" type="button" id="ripristina-tutto">Ripristina</button></div>
+    </div>`
+  );
+  $('#ripristina-tutto').addEventListener('click', async () => {
+    if (!confirm('Vuoi davvero tornare ai contenuti originali? Le modifiche salvate andranno perse.')) return;
+    azzera();
+    mod = nuoveModifiche();
+    await caricaContenuti();
+    avviso('Contenuti ripristinati.');
+    aggiornaMenu();
   });
 }
 
@@ -566,7 +502,8 @@ $('#anteprima').addEventListener('click', async () => {
   const finestra = window.open('', '_blank');
   try {
     const { html, nuoveFoto } = await costruisci();
-    let h = html.replace('<head>', `<head>\n<base href="${SITO}">`);
+    let h = html.replace('<head>', `<head>\n<base href="${new URL(SITO, location.href).href}">`);
+    h = h.replace(/assets\/img\/[a-z0-9._-]+/gi, (p) => fotoSalvata(p) || p);
     for (const [percorso, f] of Object.entries(nuoveFoto)) h = h.split(percorso).join(f.dataUrl);
     h = h.replace(
       '<body>',
@@ -612,7 +549,7 @@ $('#pubblica').addEventListener('click', async () => {
     mod = nuoveModifiche();
     await caricaContenuti();
     mostra(vista);
-    avviso('Pubblicato. Il sito si aggiorna entro un paio di minuti.');
+    avviso('Modifiche salvate.');
   } catch (e) {
     avviso(e.message && !e.stato && !(e instanceof TypeError) ? e.message : erroreGithub(e), true);
     aggiornaMenu();

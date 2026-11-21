@@ -28,22 +28,6 @@
   </form>
 </main>
 
-<main class="schermo schermo--accesso" id="configura" hidden>
-  <form class="scheda scheda--larga" id="modulo-configura" autocomplete="off">
-    <div class="marchio"><svg class="marchio__piu"><use href="#piu"/></svg><span>Pronto<b>Staff+</b></span></div>
-    <h1>Prima configurazione</h1>
-    <p class="nota">Serve una volta sola. Il token di GitHub viene cifrato con utente e password e salvato nel sito: senza la password nessuno può usarlo.</p>
-    <label class="campo"><span>Token di GitHub</span><input name="token" type="password" autocomplete="off" spellcheck="false" required placeholder="github_pat_…"></label>
-    <label class="campo"><span>Utente</span><input name="utente" value="mura" autocapitalize="off" spellcheck="false" required></label>
-    <label class="campo"><span>Password</span>
-      <span class="riga"><input name="password" type="text" autocomplete="new-password" spellcheck="false" required minlength="14"><button class="pulsante pulsante--vuoto" type="button" data-genera>Genera</button></span>
-    </label>
-    <p class="nota nota--piccola">Almeno 14 caratteri. Con «Genera» ne crei una sicura: copiala e salvala prima di continuare.</p>
-    <button class="pulsante" type="submit">Salva e attiva</button>
-    <p class="esito" role="alert"></p>
-  </form>
-</main>
-
 <div class="app" id="app" hidden>
   <header class="testata">
     <div class="marchio"><svg class="marchio__piu"><use href="#piu"/></svg><span>Pronto<b>Staff+</b></span><em>Gestionale</em></div>
