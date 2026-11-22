@@ -502,7 +502,11 @@ $('#anteprima').addEventListener('click', async () => {
   const finestra = window.open('', '_blank');
   try {
     const { html, nuoveFoto } = await costruisci();
-    let h = html.replace('<head>', `<head>\n<base href="${new URL(SITO, location.href).href}">`);
+    let h = html.replace(
+      '<head>',
+      `<head>\n<base href="${new URL(SITO, location.href).href}">\n<style>.caricamento{display:none}</style>`
+    );
+    h = h.replace('<html lang="it">', '<html lang="it" data-senza-caricamento>');
     h = h.replace(/assets\/img\/[a-z0-9._-]+/gi, (p) => fotoSalvata(p) || p);
     for (const [percorso, f] of Object.entries(nuoveFoto)) h = h.split(percorso).join(f.dataUrl);
     h = h.replace(

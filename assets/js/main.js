@@ -828,6 +828,12 @@
       gsap.set('.bottone-menu', { scale: 1 });
       return;
     }
+    if (document.documentElement.hasAttribute('data-senza-caricamento')) {
+      car.remove();
+      if (lenis) lenis.start();
+      costruisci();
+      return;
+    }
     var tl = gsap.timeline({
       onComplete: function () {
         car.remove();
