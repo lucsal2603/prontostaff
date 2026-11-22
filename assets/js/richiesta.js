@@ -1,5 +1,4 @@
-// modulo "richiedi personale"
-// finché non ci sono numero ed email veri la richiesta parte su Instagram (testo copiato negli appunti)
+// TODO email
 (function () {
   'use strict';
 

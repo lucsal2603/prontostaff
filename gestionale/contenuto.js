@@ -1,5 +1,3 @@
-// Lettura e modifica dei contenuti di index.html: testi (data-k), immagini (data-img), contatti, Google.
-
 export const SEZIONI = [
   { id: 'apertura', nome: 'Apertura' },
   { id: 'intro', nome: 'Introduzione' },
@@ -66,8 +64,6 @@ function sezioneDi(key) {
   return s === 'richiesta' ? 'piede' : s;
 }
 
-// --- testo <-> html ---------------------------------------------------------
-
 const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", apos: "'", nbsp: ' ' };
 
 function decodifica(t) {
@@ -86,7 +82,7 @@ function codifica(t) {
   return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// html del contenuto -> testo modificabile: *parole in oro*, a capo = <br>
+// *oro*, a capo = <br>
 export function inTesto(html) {
   let accento = null;
   const t = html
@@ -107,8 +103,6 @@ export function inHtml(testo, accento) {
     .replace(/\n+/g, '<br>');
 }
 
-// --- trova gli elementi con data-k ------------------------------------------
-
 function trovaElementi(html, attr) {
   const out = [];
   const re = new RegExp(`<([a-z0-9]+)\\b[^>]*\\s${attr}="([^"]+)"[^>]*>`, 'gi');
@@ -116,7 +110,7 @@ function trovaElementi(html, attr) {
   while ((m = re.exec(html))) {
     const tag = m[1].toLowerCase();
     const inizio = m.index + m[0].length;
-    // cerca la chiusura giusta contando gli stessi tag annidati
+    // tag annidati
     const scan = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'gi');
     scan.lastIndex = inizio;
     let prof = 1,
@@ -155,7 +149,7 @@ export function estraiTesti(html) {
 export function applicaTesti(html, testi) {
   const elementi = trovaElementi(html, 'data-k');
   const accenti = Object.fromEntries(elementi.map((e) => [e.key, (inTesto(e.interno) || {}).accento]));
-  // dal fondo all'inizio, così gli indici restano validi
+  // dal fondo
   for (const e of elementi.slice().reverse()) {
     if (!(e.key in testi)) continue;
     const nuovo = String(testi[e.key]);
@@ -165,8 +159,7 @@ export function applicaTesti(html, testi) {
   return html;
 }
 
-// --- immagini ---------------------------------------------------------------
-
+// immagini
 export function estraiImmagini(html) {
   const out = {};
   const re = /<img\b[^>]*\sdata-img="([^"]+)"[^>]*>/gi;
@@ -199,8 +192,7 @@ export function fileUsati(...testi) {
   return set;
 }
 
-// --- contatti ---------------------------------------------------------------
-
+// contatti
 export function estraiContatti(html) {
   const tel = (html.match(/tel:\+(\d{8,15})/) || [])[1] || '';
   const ig = (html.match(/instagram\.com\/([a-z0-9._]+)/i) || [])[1] || '';
@@ -242,8 +234,7 @@ export function applicaContatti(testo, vecchi, nuovi) {
   return testo;
 }
 
-// --- Google ----------------------------------------------------------------
-
+// Google
 export function estraiGoogle(html) {
   return {
     titolo: decodifica((html.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || ''),

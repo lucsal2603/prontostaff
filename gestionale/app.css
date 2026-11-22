@@ -51,7 +51,6 @@ a {
   outline-offset: 3px;
 }
 
-/* elementi comuni */
 .marchio {
   display: flex;
   align-items: center;
@@ -372,10 +371,14 @@ textarea {
   border-color: rgba(233, 184, 60, 0.6);
 }
 .foto__img {
+  position: relative;
+  overflow: hidden;
   aspect-ratio: 4 / 3;
   background: var(--carbone-2);
 }
 .foto__img img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -509,12 +512,4 @@ textarea {
     flex: 1;
     padding: 0 10px;
   }
-}
-.foto__img {
-  position: relative;
-  overflow: hidden;
-}
-.foto__img img {
-  position: absolute;
-  inset: 0;
 }

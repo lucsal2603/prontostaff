@@ -1,4 +1,3 @@
-// sfondo dell'apertura: griglia di + che si accendono sotto due luci calde
 (function () {
   'use strict';
 
@@ -45,7 +44,6 @@
     var l2 = luce(t, 0.08, 0.13, 3.1, 4.2);
     var r = Math.max(W, H) * 0.42;
 
-    // alone delle luci
     [l1, l2].forEach(function (l, i) {
       var g = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, r);
       g.addColorStop(0, i ? 'rgba(233,184,60,0.13)' : 'rgba(233,184,60,0.18)');
@@ -61,7 +59,6 @@
       ctx.fillRect(0, 0, W, H);
     }
 
-    // i +
     var r2 = r * r,
       rc2 = r * r * 0.36;
     for (var i = 0; i < punti.length; i++) {

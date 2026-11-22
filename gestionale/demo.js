@@ -1,9 +1,6 @@
-// Versione dimostrativa: legge i file dal sito e salva le modifiche solo in questo browser.
-
 const SALVATAGGIO = 'ps-gestionale-file';
 const ACCESSO = 'ps-gestionale-accesso';
 
-// utente "mura", password "prontostaff2026": cambiabile da Impostazioni
 const ACCESSO_INIZIALE = '81a84ad8d7950f4a3f4141960556efdf307faf17c3063ac7db5bcb05aef33dd9';
 
 function stato() {
@@ -32,7 +29,6 @@ export async function salvaAccesso(utente, password) {
   localStorage.setItem(ACCESSO, await impronta(utente, password));
 }
 
-// foto salvate in questo browser: percorso -> data URL
 export function fotoSalvata(percorso) {
   const f = stato().file[percorso];
   if (!f || f.base64 == null) return null;

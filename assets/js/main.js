@@ -15,7 +15,6 @@
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
-  // lenis
   var lenis = null;
   if (!ridotto) {
     lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
@@ -59,7 +58,7 @@
     });
   });
 
-  // transizione coi bicchieri, solo dai link del menu
+  // bicchieri (solo link del menu)
   var passaggio = $('.passaggio');
   var inPassaggio = false;
   var TIPI = ['b-coppa', 'b-flute', 'b-martini', 'b-calice', 'b-tumbler'];
@@ -419,7 +418,7 @@
   ora();
   setInterval(ora, 10000);
 
-  // tutte le animazioni allo scroll
+  // scroll
   function costruisci() {
     misuraMarchio();
     var mm = gsap.matchMedia();
@@ -675,7 +674,6 @@
       scrollTrigger: { trigger: '.rinforzo__testo', start: 'top 88%' }
     });
 
-    // titoli delle sezioni nuove
     $$('.evento__titolo, .selezione__capo h2, .file__capo h2').forEach(function (el) {
       SplitText.create(el, {
         type: 'lines',

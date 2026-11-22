@@ -1,4 +1,3 @@
-// cursore a +
 (function () {
   'use strict';
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;

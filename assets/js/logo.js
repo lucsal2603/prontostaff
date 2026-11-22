@@ -1,4 +1,4 @@
-// intro: vassoio -> bicchieri -> + -> logo
+// vassoio > bicchieri > + > logo
 (function () {
   'use strict';
 

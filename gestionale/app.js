@@ -17,7 +17,6 @@ const SITO = '../';
 const FILE_JS = 'assets/js/richiesta.js';
 const MINUTI_INATTIVITA = 30;
 
-const github = archivio;
 let sessione = null; // { utente }
 let orig = null; // contenuti come sono ora
 let mod = nuoveModifiche();
@@ -48,8 +47,6 @@ function srcFoto(src) {
   return fotoSalvata(src) || SITO + src;
 }
 
-// --- avvisi ------------------------------------------------------------------
-
 let timerAvviso;
 function avviso(testo, errore = false) {
   const el = $('#avviso');
@@ -60,13 +57,12 @@ function avviso(testo, errore = false) {
   timerAvviso = setTimeout(() => el.classList.remove('visibile'), errore ? 7000 : 4500);
 }
 
-function erroreGithub(e) {
+function messaggioErrore(e) {
   if (e instanceof TypeError) return 'Connessione assente. Controlla internet e riprova.';
   return e.message || 'Qualcosa non ha funzionato. Riprova.';
 }
 
-// --- accesso ---------------------------------------------------------------------
-
+// accesso
 let tentativi = 0;
 
 function avvio() {
@@ -82,7 +78,6 @@ $('#modulo-accesso').addEventListener('submit', async (e) => {
   pulsante.disabled = true;
   pulsante.innerHTML = '<span class="attesa"></span>Verifica';
   esito.textContent = '';
-  // ogni tentativo sbagliato fa aspettare un po' di più
   await new Promise((r) => setTimeout(r, tentativi > 2 ? Math.min(tentativi, 10) * 1000 : 500));
   const utente = f.utente.value.trim();
   const ok = await controllaAccesso(utente, f.password.value);
@@ -104,8 +99,6 @@ $('#modulo-accesso').addEventListener('submit', async (e) => {
   await entra();
 });
 
-// --- dentro ----------------------------------------------------------------------
-
 async function entra() {
   $('#app').hidden = false;
   $('#contenuto').innerHTML = '<p class="nota"><span class="attesa"></span>Carico i contenuti del sito…</p>';
@@ -117,7 +110,7 @@ async function entra() {
     $('#contenuto').innerHTML = '';
     const p = document.createElement('p');
     p.className = 'nota';
-    p.textContent = erroreGithub(e);
+    p.textContent = messaggioErrore(e);
     $('#contenuto').append(p);
     costruisciMenu();
   }
@@ -125,7 +118,7 @@ async function entra() {
 }
 
 async function caricaContenuti() {
-  const [html, js] = await Promise.all([github.leggi('index.html'), github.leggi(FILE_JS)]);
+  const [html, js] = await Promise.all([archivio.leggi('index.html'), archivio.leggi(FILE_JS)]);
   orig = {
     testi: Object.fromEntries(estraiTesti(html).map((t) => [t.key, t])),
     immagini: Object.fromEntries(estraiImmagini(html).map((i) => [i.slot, i])),
@@ -289,8 +282,7 @@ function mostraSezione(id) {
   c.append(g);
 }
 
-// --- immagini ----------------------------------------------------------------------
-
+// immagini
 async function preparaFoto(file) {
   if (!/^image\//.test(file.type)) throw new Error('Il file non è un’immagine.');
   if (file.size > 25 * 1024 * 1024) throw new Error('La foto è troppo grande (massimo 25 MB).');
@@ -349,8 +341,7 @@ function mostraImmagini() {
   c.append(g);
 }
 
-// --- contatti e Google ---------------------------------------------------------
-
+// contatti e Google
 function mostraContatti() {
   const c = intestazione(
     'Contatti',
@@ -408,8 +399,7 @@ function mostraGoogle() {
   c.append(g);
 }
 
-// --- impostazioni ---------------------------------------------------------------
-
+// impostazioni
 function mostraImpostazioni() {
   const c = intestazione('Impostazioni');
   c.insertAdjacentHTML(
@@ -465,8 +455,7 @@ function mostraImpostazioni() {
   });
 }
 
-// --- applicare le modifiche ---------------------------------------------------------
-
+// salvataggio
 function nomeFile(slot, ext) {
   const d = new Date();
   const p = (n) => String(n).padStart(2, '0');
@@ -474,7 +463,7 @@ function nomeFile(slot, ext) {
 }
 
 async function costruisci() {
-  const [html0, js0] = await Promise.all([github.leggi('index.html'), github.leggi(FILE_JS)]);
+  const [html0, js0] = await Promise.all([archivio.leggi('index.html'), archivio.leggi(FILE_JS)]);
   const contattiOra = estraiContatti(html0);
   let html = applicaTesti(html0, mod.testi);
   let js = js0;
@@ -519,7 +508,7 @@ $('#anteprima').addEventListener('click', async () => {
     setTimeout(() => URL.revokeObjectURL(url), 60000);
   } catch (e) {
     if (finestra) finestra.close();
-    avviso(erroreGithub(e), true);
+    avviso(messaggioErrore(e), true);
   }
 });
 
@@ -549,24 +538,21 @@ $('#pubblica').addEventListener('click', async () => {
     if (Object.keys(mod.contatti).length) parti.push('contatti');
     if (Object.keys(mod.google).length) parti.push('Google');
     if (Object.keys(file).length)
-      await github.pubblica(file, 'Aggiornato dal gestionale: ' + parti.join(', '));
+      await archivio.pubblica(file, 'Aggiornato dal gestionale: ' + parti.join(', '));
     mod = nuoveModifiche();
     await caricaContenuti();
     mostra(vista);
     avviso('Modifiche salvate.');
   } catch (e) {
-    avviso(e.message && !e.stato && !(e instanceof TypeError) ? e.message : erroreGithub(e), true);
+    avviso(e.message && !e.stato && !(e instanceof TypeError) ? e.message : messaggioErrore(e), true);
     aggiornaMenu();
   }
   btn.textContent = 'Pubblica';
   aggiornaMenu();
 });
 
-// --- uscita -------------------------------------------------------------------
-
 function esci() {
   sessione = null;
-  github = null;
   location.reload();
 }
 $('#esci').addEventListener('click', () => {

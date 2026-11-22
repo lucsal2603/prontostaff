@@ -1,4 +1,3 @@
-// omino col vassoio in basso, avanza con lo scroll
 (function () {
   'use strict';
 
