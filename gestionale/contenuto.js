@@ -188,7 +188,7 @@ export function applicaImmagine(html, slot, src, w, h) {
 
 export function fileUsati(...testi) {
   const set = new Set();
-  for (const t of testi) for (const m of t.matchAll(/assets\/img\/[a-z0-9._-]+/gi)) set.add(m[0]);
+  for (const t of testi) for (const m of t.matchAll(/assets\/(?:img|video)\/[a-z0-9._-]+/gi)) set.add(m[0]);
   return set;
 }
 
@@ -271,11 +271,27 @@ export const SFONDI = [
   { id: 'bollicine', nome: 'Bollicine', nota: 'Bollicine di champagne che salgono piano.' }
 ];
 
+export const SFONDI_MEDIA = [
+  { id: 'immagine', nome: 'Una tua foto', nota: 'Una foto ferma dietro al titolo, leggermente scurita.' },
+  { id: 'video', nome: 'Un tuo video', nota: 'Un video muto che gira in loop. Meglio corto e leggero.' }
+];
+
+const TAG_SFONDO = /<canvas class="sfondo"[^>]*><\/canvas>/;
+
 export function estraiSfondo(html) {
-  return (html.match(/class="sfondo" data-sfondo="([a-z]+)"/) || [])[1] || 'fili';
+  const tag = (html.match(TAG_SFONDO) || [''])[0];
+  return {
+    id: (tag.match(/data-sfondo="([a-z]+)"/) || [])[1] || 'fili',
+    src: (tag.match(/data-src="([^"]+)"/) || [])[1] || ''
+  };
 }
 
-export function applicaSfondo(html, id) {
-  if (!SFONDI.some((s) => s.id === id)) return html;
-  return html.replace(/(class="sfondo" data-sfondo=")[a-z]+(")/, '$1' + id + '$2');
+export function applicaSfondo(html, { id, src }) {
+  const media = SFONDI_MEDIA.some((s) => s.id === id);
+  if (!media && !SFONDI.some((s) => s.id === id)) return html;
+  const attr = media && src ? ` data-src="${src}"` : '';
+  return html.replace(
+    TAG_SFONDO,
+    `<canvas class="sfondo" data-sfondo="${id}"${attr} aria-hidden="true"></canvas>`
+  );
 }

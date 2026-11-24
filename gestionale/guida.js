@@ -60,7 +60,7 @@ const PASSI = [
     bersaglio: '#contenuto .sfondi',
     titolo: 'Lo sfondo',
     testo:
-      'Lo sfondo animato in cima al sito. Un clic su quello che preferisci, poi Anteprima per vederlo muoversi e Pubblica.'
+      'Lo sfondo in cima al sito. Scegli uno di quelli animati con un clic, oppure carica una tua foto o un tuo video. Poi Anteprima e Pubblica.'
   },
   {
     vista: 'contatti',

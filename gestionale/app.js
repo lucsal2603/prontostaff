@@ -10,10 +10,11 @@ import {
   estraiGoogle,
   applicaGoogle,
   SFONDI,
+  SFONDI_MEDIA,
   estraiSfondo,
   applicaSfondo
 } from './contenuto.js';
-import { archivio, controllaAccesso, salvaAccesso, fotoSalvata, azzera } from './demo.js';
+import { archivio, controllaAccesso, salvaAccesso, fotoSalvata, azzera, preparaArchivio } from './demo.js';
 import { avviaGuida, guidaVista } from './guida.js';
 
 const $ = (s, c = document) => c.querySelector(s);
@@ -129,6 +130,7 @@ function apriGuida() {
 $('#apri-guida').addEventListener('click', apriGuida);
 
 async function caricaContenuti() {
+  await preparaArchivio();
   const [html, js] = await Promise.all([archivio.leggi('index.html'), archivio.leggi(FILE_JS)]);
   orig = {
     testi: Object.fromEntries(estraiTesti(html).map((t) => [t.key, t])),
@@ -298,11 +300,10 @@ function mostraSezione(id) {
 }
 
 // immagini
-async function preparaFoto(file) {
+async function preparaFoto(file, lato = 1800) {
   if (!/^image\//.test(file.type)) throw new Error('Il file non è un’immagine.');
   if (file.size > 25 * 1024 * 1024) throw new Error('La foto è troppo grande (massimo 25 MB).');
   const bmp = await createImageBitmap(file);
-  const lato = 1800;
   const k = Math.min(1, lato / Math.max(bmp.width, bmp.height));
   const w = Math.round(bmp.width * k);
   const h = Math.round(bmp.height * k);
@@ -313,6 +314,23 @@ async function preparaFoto(file) {
   const webp = cv.toDataURL('image/webp', 0.84);
   const dataUrl = webp.startsWith('data:image/webp') ? webp : cv.toDataURL('image/jpeg', 0.86);
   return { dataUrl, w, h, ext: dataUrl.startsWith('data:image/webp') ? 'webp' : 'jpg' };
+}
+
+async function preparaVideo(file) {
+  if (!/^video\//.test(file.type)) throw new Error('Il file non è un video.');
+  if (file.size > 60 * 1024 * 1024)
+    throw new Error('Il video è troppo grande (massimo 60 MB). Meglio un video corto, di 10-20 secondi.');
+  const url = URL.createObjectURL(file);
+  await new Promise((ok, ko) => {
+    const v = document.createElement('video');
+    v.muted = true;
+    v.preload = 'metadata';
+    v.onloadedmetadata = ok;
+    v.onerror = () => ko(new Error('Questo video non si riesce a leggere. Prova con un file MP4.'));
+    v.src = url;
+  });
+  const ext = /webm/.test(file.type) ? 'webm' : /quicktime/.test(file.type) ? 'mov' : 'mp4';
+  return { blob: file, url, ext };
 }
 
 function mostraImmagini() {
@@ -357,28 +375,117 @@ function mostraImmagini() {
 }
 
 // sfondo
+function sfondoUguale(s) {
+  return !s || (s.id === orig.sfondo.id && !s.file && (s.src || '') === orig.sfondo.src);
+}
+
 function mostraSfondo() {
   const c = intestazione(
     'Sfondo',
-    "Lo sfondo animato dietro al titolo, in cima al sito. Scegline uno con un clic, poi guarda l'anteprima e pubblica."
+    "Lo sfondo dietro al titolo, in cima al sito. Scegli uno di quelli animati oppure carica una tua foto o un tuo video, poi guarda l'anteprima e pubblica."
   );
   const g = document.createElement('div');
   g.className = 'sfondi';
   const scelto = mod.sfondo || orig.sfondo;
-  SFONDI.forEach((s) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'sfondo-scelta' + (s.id === scelto ? ' sfondo-scelta--attivo' : '');
-    b.setAttribute('aria-pressed', s.id === scelto ? 'true' : 'false');
-    b.innerHTML = `<span class="sfondo-scelta__img"><img alt="" src="sfondi/${s.id}.webp"></span><span class="sfondo-scelta__piede"><span><b></b><small></small></span><em></em></span>`;
+
+  const scheda = (s, anteprima, etichetta) => {
+    const b = document.createElement('div');
+    b.className = 'sfondo-scelta' + (s.id === scelto.id ? ' sfondo-scelta--attivo' : '');
+    b.tabIndex = 0;
+    b.setAttribute('role', 'button');
+    b.setAttribute('aria-pressed', s.id === scelto.id ? 'true' : 'false');
+    b.innerHTML = `<span class="sfondo-scelta__img"></span><span class="sfondo-scelta__piede"><span><b></b><small></small></span><em></em></span>`;
+    $('.sfondo-scelta__img', b).append(anteprima);
     $('b', b).textContent = s.nome;
     $('small', b).textContent = s.nota;
-    $('em', b).textContent = s.id === orig.sfondo ? 'Sul sito' : s.id === scelto ? 'Scelto' : '';
-    b.addEventListener('click', () => {
-      mod.sfondo = s.id === orig.sfondo ? null : s.id;
-      mostraSfondo();
-      aggiornaMenu();
+    $('em', b).textContent = etichetta;
+    return b;
+  };
+  const scegli = (valore) => {
+    mod.sfondo = sfondoUguale(valore) ? null : valore;
+    mostraSfondo();
+    aggiornaMenu();
+  };
+
+  SFONDI.forEach((s) => {
+    const img = document.createElement('img');
+    img.alt = '';
+    img.src = `sfondi/${s.id}.webp`;
+    const b = scheda(s, img, s.id === orig.sfondo.id ? 'Sul sito' : s.id === scelto.id ? 'Scelto' : '');
+    const vai = () => scegli({ id: s.id });
+    b.addEventListener('click', vai);
+    b.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), vai()));
+    g.append(b);
+  });
+
+  SFONDI_MEDIA.forEach((s) => {
+    const video = s.id === 'video';
+    const nuovo = mod.sfondo && mod.sfondo.id === s.id && mod.sfondo.file ? mod.sfondo.file : null;
+    const sulSito = orig.sfondo.id === s.id && orig.sfondo.src ? srcFoto(orig.sfondo.src) : null;
+    const sorgente = nuovo ? nuovo.url || nuovo.dataUrl : sulSito;
+    let anteprima;
+    if (sorgente) {
+      anteprima = document.createElement(video ? 'video' : 'img');
+      if (video) {
+        anteprima.muted = true;
+        anteprima.loop = true;
+        anteprima.playsInline = true;
+        anteprima.autoplay = true;
+      } else anteprima.alt = '';
+      anteprima.src = sorgente;
+    } else {
+      anteprima = document.createElement('span');
+      anteprima.className = 'sfondo-scelta__vuoto';
+      anteprima.innerHTML = `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.9 1.5h2.2v7.4h7.4v2.2h-7.4v7.4H8.9v-7.4H1.5V8.9h7.4z" fill="currentColor"/></svg><span></span>`;
+      $('span', anteprima).textContent = video ? 'Carica un video' : 'Carica una foto';
+    }
+    const etichetta = nuovo ? 'Scelto' : orig.sfondo.id === s.id ? 'Sul sito' : '';
+    const b = scheda(s, anteprima, etichetta);
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = video ? 'video/mp4,video/webm,video/quicktime' : 'image/*';
+    input.hidden = true;
+    const azioni = document.createElement('span');
+    azioni.className = 'sfondo-scelta__azioni';
+    const carica = document.createElement('button');
+    carica.type = 'button';
+    carica.className = 'pulsante pulsante--vuoto pulsante--piccolo';
+    carica.textContent = sorgente
+      ? video
+        ? 'Cambia video'
+        : 'Cambia foto'
+      : video
+        ? 'Carica video'
+        : 'Carica foto';
+    azioni.append(carica, input);
+    $('.sfondo-scelta__piede > span', b).append(azioni);
+    carica.addEventListener('click', (e) => {
+      e.stopPropagation();
+      input.click();
     });
+    input.addEventListener('click', (e) => e.stopPropagation());
+    input.addEventListener('change', async () => {
+      const f = input.files[0];
+      if (!f) return;
+      carica.disabled = true;
+      carica.innerHTML = '<span class="attesa"></span>Preparo';
+      try {
+        const file = video ? await preparaVideo(f) : await preparaFoto(f, 2400);
+        scegli({ id: s.id, file });
+      } catch (err) {
+        avviso(err.message || 'Non riesco a leggere questo file.', true);
+        mostraSfondo();
+      }
+    });
+    const vai = () => {
+      if (!sorgente) return input.click();
+      scegli(nuovo ? mod.sfondo : { id: s.id, src: orig.sfondo.src });
+    };
+    b.addEventListener('click', vai);
+    b.addEventListener(
+      'keydown',
+      (e) => e.target === b && (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), vai())
+    );
     g.append(b);
   });
   c.append(g);
@@ -490,7 +597,7 @@ function mostraImpostazioni() {
   );
   $('#ripristina-tutto').addEventListener('click', async () => {
     if (!confirm('Vuoi davvero tornare ai contenuti originali? Le modifiche salvate andranno perse.')) return;
-    azzera();
+    await azzera();
     mod = nuoveModifiche();
     await caricaContenuti();
     avviso('Contenuti ripristinati.');
@@ -516,7 +623,6 @@ async function costruisci() {
     js = applicaContatti(js, contattiOra, nuovi);
   }
   if (Object.keys(mod.google).length) html = applicaGoogle(html, mod.google);
-  if (mod.sfondo) html = applicaSfondo(html, mod.sfondo);
   const nuoveFoto = {};
   const vecchie = new Set();
   for (const [slot, f] of Object.entries(mod.immagini)) {
@@ -525,6 +631,18 @@ async function costruisci() {
     const percorso = nomeFile(slot, f.ext);
     html = applicaImmagine(html, slot, percorso, f.w, f.h);
     nuoveFoto[percorso] = f;
+  }
+  if (mod.sfondo) {
+    const s = mod.sfondo;
+    if (orig.sfondo.src) vecchie.add(orig.sfondo.src);
+    if (s.file) {
+      const percorso = nomeFile('sfondo', s.file.ext).replace(
+        'assets/img/',
+        s.id === 'video' ? 'assets/video/' : 'assets/img/'
+      );
+      html = applicaSfondo(html, { id: s.id, src: percorso });
+      nuoveFoto[percorso] = s.file;
+    } else html = applicaSfondo(html, { id: s.id, src: s.src });
   }
   const usati = fileUsati(html, js);
   const daTogliere = [...vecchie].filter((v) => !usati.has(v));
@@ -540,8 +658,8 @@ $('#anteprima').addEventListener('click', async () => {
       `<head>\n<base href="${new URL(SITO, location.href).href}">\n<style>.caricamento{display:none}</style>`
     );
     h = h.replace('<html lang="it">', '<html lang="it" data-senza-caricamento>');
-    h = h.replace(/assets\/img\/[a-z0-9._-]+/gi, (p) => fotoSalvata(p) || p);
-    for (const [percorso, f] of Object.entries(nuoveFoto)) h = h.split(percorso).join(f.dataUrl);
+    h = h.replace(/assets\/(?:img|video)\/[a-z0-9._-]+/gi, (p) => fotoSalvata(p) || p);
+    for (const [percorso, f] of Object.entries(nuoveFoto)) h = h.split(percorso).join(f.url || f.dataUrl);
     h = h.replace(
       '<body>',
       '<body><div style="position:fixed;z-index:9999;left:50%;top:12px;transform:translateX(-50%);padding:8px 16px;border-radius:99px;background:#e9b83c;color:#0b0b0a;font:500 13px system-ui">Anteprima, non ancora pubblicata</div>'
@@ -572,7 +690,7 @@ $('#pubblica').addEventListener('click', async () => {
     if (html !== html0) file['index.html'] = { testo: html };
     if (js !== js0) file[FILE_JS] = { testo: js };
     for (const [percorso, f] of Object.entries(nuoveFoto))
-      file[percorso] = { base64: f.dataUrl.split(',')[1] };
+      file[percorso] = f.blob ? { blob: f.blob } : { base64: f.dataUrl.split(',')[1] };
     daTogliere.forEach((p) => (file[p] = null));
     const parti = [];
     const nt = Object.keys(mod.testi).length;

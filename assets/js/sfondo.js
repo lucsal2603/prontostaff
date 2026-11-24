@@ -3,8 +3,48 @@
 
   var canvas = document.querySelector('.sfondo');
   if (!canvas) return;
-  var ctx = canvas.getContext('2d');
   var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var tipo = canvas.dataset.sfondo;
+  var src = canvas.dataset.src;
+  if (
+    (tipo === 'immagine' || tipo === 'video') &&
+    src &&
+    !new URLSearchParams(location.search).get('sfondo')
+  ) {
+    var media = document.createElement(tipo === 'video' ? 'video' : 'img');
+    media.className = 'sfondo-media';
+    media.setAttribute('aria-hidden', 'true');
+    if (tipo === 'video') {
+      media.muted = true;
+      media.loop = true;
+      media.playsInline = true;
+      media.setAttribute('muted', '');
+      media.setAttribute('playsinline', '');
+      media.preload = 'auto';
+      if (!ridotto) media.autoplay = true;
+      media.src = src;
+      if (!ridotto) {
+        var parti = function () {
+          var p = media.play();
+          if (p && p.catch) p.catch(function () {});
+        };
+        media.addEventListener('canplay', parti, { once: true });
+        new IntersectionObserver(function (e) {
+          e[0].isIntersecting ? parti() : media.pause();
+        }).observe(media);
+      }
+    } else {
+      media.alt = '';
+      media.decoding = 'async';
+      media.src = src;
+    }
+    canvas.parentNode.classList.add('apertura__foto--media');
+    canvas.replaceWith(media);
+    return;
+  }
+
+  var ctx = canvas.getContext('2d');
   var mouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   var W = 0,
