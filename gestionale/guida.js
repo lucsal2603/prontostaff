@@ -4,7 +4,7 @@ const PASSI = [
   {
     titolo: 'Benvenuto nel gestionale',
     testo:
-      'Da qui cambi testi, foto, sfondo e contatti del sito, senza toccare il codice. Ti facciamo vedere come funziona: ci vuole un minuto.'
+      'Da qui cambi testi, foto, sfondo e contatti del sito, senza toccare il codice. Ti faccio vedere come funziona: ci vuole un minuto.'
   },
   {
     vista: 'apertura',
