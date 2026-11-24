@@ -14,6 +14,10 @@
     punti = [];
   var cursore = { x: -9999, y: -9999, tx: -9999, ty: -9999, forza: 0 };
   var visibile = true;
+  var modo = (new URLSearchParams(location.search).get('sfondo') || 'piu').toLowerCase();
+  var tavoli = [],
+    bolle = [],
+    fili = [];
 
   function misura() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -28,6 +32,156 @@
       oy = ((H % passo) + passo) / 2;
     for (var y = oy; y < H; y += passo) {
       for (var x = ox; x < W; x += passo) punti.push([x, y, Math.random()]);
+    }
+
+    tavoli = [];
+    var pt = W < 760 ? 96 : 132;
+    var riga = 0;
+    for (var ty = pt * 0.45; ty < H + pt; ty += pt * 0.86, riga++) {
+      for (var tx = (riga % 2 ? pt / 2 : 0) + pt * 0.2; tx < W + pt; tx += pt) {
+        tavoli.push({
+          x: tx,
+          y: ty,
+          r: pt * (0.17 + Math.random() * 0.03),
+          g: Math.random() * 6.28,
+          s: Math.random()
+        });
+      }
+    }
+
+    bolle = [];
+    var nb = Math.round((W * H) / (W < 760 ? 3200 : 4200));
+    for (var i = 0; i < nb; i++) bolle.push(nuovaBolla(true));
+
+    fili = [];
+    var nf = W < 760 ? 18 : 28;
+    for (var f = 0; f < nf; f++)
+      fili.push({ y: (H * (f + 0.5)) / nf, f: Math.random() * 6.28, v: 0.6 + Math.random() * 0.8 });
+  }
+
+  function nuovaBolla(ovunque) {
+    return {
+      x: Math.random() * W,
+      y: ovunque ? Math.random() * H : H + 10,
+      r: 1 + Math.pow(Math.random(), 2) * 5,
+      v: 10 + Math.random() * 26,
+      f: Math.random() * 6.28,
+      o: 0
+    };
+  }
+
+  function intensita(x, y, l1, l2, r2, rc2) {
+    var dx = x - l1.x,
+      dy = y - l1.y;
+    var k = Math.max(0, 1 - (dx * dx + dy * dy) / r2);
+    dx = x - l2.x;
+    dy = y - l2.y;
+    k += 0.8 * Math.max(0, 1 - (dx * dx + dy * dy) / r2);
+    if (cursore.forza > 0.01) {
+      dx = x - cursore.x;
+      dy = y - cursore.y;
+      k += 1.2 * cursore.forza * Math.max(0, 1 - (dx * dx + dy * dy) / rc2);
+    }
+    return Math.min(1, k);
+  }
+
+  function colore(k, base) {
+    return k > 0.15
+      ? 'rgba(233,184,60,' + (0.08 + k * k * 0.7).toFixed(3) + ')'
+      : 'rgba(242,237,227,' + (base + k * 0.3).toFixed(3) + ')';
+  }
+
+  function disegnaTavoli(t, l1, l2, r2, rc2) {
+    ctx.lineWidth = 1;
+    for (var i = 0; i < tavoli.length; i++) {
+      var tv = tavoli[i];
+      var k = intensita(tv.x, tv.y, l1, l2, r2, rc2);
+      ctx.strokeStyle = colore(k, 0.07);
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.beginPath();
+      ctx.arc(tv.x, tv.y, tv.r, 0, 6.2832);
+      ctx.stroke();
+      var giro = tv.g + t * 0.04 * (tv.s - 0.5);
+      var apri = tv.r + 7 + k * 4;
+      for (var c = 0; c < 8; c++) {
+        var a = giro + (c / 8) * 6.2832;
+        var cx = tv.x + Math.cos(a) * apri,
+          cy = tv.y + Math.sin(a) * apri;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 2.6 + k * 1.2, a + 1.9, a + 4.4);
+        ctx.stroke();
+      }
+      if (k > 0.35) {
+        ctx.beginPath();
+        ctx.arc(tv.x, tv.y, 1.4 + k * 1.4, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+  }
+
+  var ultimo = 0;
+  function disegnaBolle(t, l1, l2, r2, rc2) {
+    var dt = Math.min(0.05, t - ultimo || 0);
+    ultimo = t;
+    ctx.lineWidth = 1;
+    for (var i = 0; i < bolle.length; i++) {
+      var b = bolle[i];
+      b.y -= b.v * dt;
+      b.o = Math.min(1, b.o + dt * 0.8);
+      var x = b.x + Math.sin(t * 1.4 + b.f) * (3 + b.r);
+      if (cursore.forza > 0.01) {
+        var dx = x - cursore.x,
+          dy = b.y - cursore.y,
+          d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 120) b.x += (dx / (d || 1)) * (1 - d / 120) * 2.2 * cursore.forza;
+      }
+      if (b.y < -10) {
+        bolle[i] = nuovaBolla(false);
+        continue;
+      }
+      var k = intensita(x, b.y, l1, l2, r2, rc2);
+      ctx.strokeStyle = colore(k, 0.14);
+      ctx.globalAlpha = b.o * Math.min(1, b.y / (H * 0.25));
+      ctx.beginPath();
+      ctx.arc(x, b.y, b.r, 0, 6.2832);
+      ctx.stroke();
+      if (k > 0.3 && b.r > 2) {
+        ctx.beginPath();
+        ctx.arc(x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.22, 0, 6.2832);
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function disegnaFili(t, l1, l2, r2, rc2) {
+    ctx.lineWidth = 1;
+    var tratto = W < 760 ? 10 : 14;
+    for (var i = 0; i < fili.length; i++) {
+      var fl = fili[i];
+      var prec = null;
+      for (var x = -tratto; x <= W + tratto; x += tratto) {
+        var y =
+          fl.y +
+          Math.sin(x * 0.006 + t * 0.35 * fl.v + fl.f) * 14 +
+          Math.sin(x * 0.013 - t * 0.22 + i * 0.4) * 7;
+        if (cursore.forza > 0.01) {
+          var dx = x - cursore.x,
+            dy = y - cursore.y,
+            d2 = dx * dx + dy * dy;
+          y += Math.tanh(dy / 18) * 28 * cursore.forza * Math.exp(-d2 / 12000);
+        }
+        if (prec) {
+          var k = intensita(x, y, l1, l2, r2, rc2);
+          ctx.strokeStyle = colore(k, 0.06);
+          ctx.beginPath();
+          ctx.moveTo(prec[0], prec[1]);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+        prec = [x, y];
+      }
     }
   }
 
@@ -61,6 +215,9 @@
 
     var r2 = r * r,
       rc2 = r * r * 0.36;
+    if (modo === 'tavoli') return disegnaTavoli(t, l1, l2, r2, rc2);
+    if (modo === 'bollicine') return disegnaBolle(t, l1, l2, r2, rc2);
+    if (modo === 'fili') return disegnaFili(t, l1, l2, r2, rc2);
     for (var i = 0; i < punti.length; i++) {
       var p = punti[i];
       var dx = p[0] - l1.x,

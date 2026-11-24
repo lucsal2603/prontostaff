@@ -30,7 +30,7 @@
     el.classList.toggle(
       'puntatore--scuro',
       !!t.closest('.piede, .pillola--oro, .tessera--oro, .passaggio, .pieno') &&
-        !t.closest('.tondo--nero, .pillola--nera')
+        !t.closest('.tondo--nero, .pillola--nera, .piede .pillola, .scelta__lista, .calendario')
     );
     if (t.closest('input, textarea, select, .figure__elenco')) imposta('nascosto');
     else if (t.closest('a, button, label, .voce')) imposta('link');

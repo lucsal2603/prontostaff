@@ -73,6 +73,8 @@
 
   form.addEventListener('input', function (e) {
     e.target.classList.remove('errore');
+    var c = e.target.closest('.campo');
+    if (c) c.classList.remove('errore');
   });
 
   form.addEventListener('submit', function (e) {
@@ -82,11 +84,13 @@
     });
     mancanti.forEach(function (el) {
       el.classList.add('errore');
+      el.closest('.campo').classList.add('errore');
     });
     if (mancanti.length) {
       esito.textContent =
         'Mancano alcuni dati: data, luogo, tipo di servizio e un recapito ci servono per risponderti.';
-      mancanti[0].focus();
+      var primo = mancanti[0].closest('.campo').querySelector('.scelta__campo') || mancanti[0];
+      primo.focus();
       return;
     }
 

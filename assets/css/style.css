@@ -280,13 +280,13 @@ button {
   right: 0;
   bottom: 0;
   z-index: 55;
-  width: min(560px, 100vw);
+  width: min(680px, 100vw);
   background: var(--carbone);
   transform: translateX(calc(100% + 120px));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(100px, 16vh, 150px) clamp(36px, 7vw, 100px) 44px;
+  padding: clamp(100px, 16vh, 150px) clamp(36px, 6vw, 90px) 44px;
 }
 .menu__curva {
   position: absolute;
@@ -305,13 +305,15 @@ button {
 .menu nav {
   display: flex;
   flex-direction: column;
+  container-type: inline-size;
 }
 .menu nav a {
   position: relative;
   display: flex;
   align-items: center;
-  font-size: clamp(44px, 4.2vw, 60px);
+  font-size: min(clamp(44px, 4.2vw, 60px), 10.6cqi);
   line-height: 1.24;
+  white-space: nowrap;
   letter-spacing: -0.03em;
 }
 .menu nav {
@@ -1233,7 +1235,8 @@ button {
 .camminatore--su-oro .om-ombra {
   opacity: 0.18;
 }
-.menu-aperto .camminatore {
+.menu-aperto .camminatore,
+.modulo-aperto .camminatore {
   opacity: 0;
   transition: opacity 0.4s var(--curva);
 }
@@ -1813,4 +1816,427 @@ h2.rinforzo__frase {
 }
 .con-puntatore select {
   cursor: pointer !important;
+}
+
+.richiesta .campo {
+  position: relative;
+}
+.richiesta .campo::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--nero);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.6s var(--curva);
+  pointer-events: none;
+}
+.richiesta .campo:focus-within::after,
+.richiesta .campo.aperto::after {
+  transform: scaleX(1);
+}
+.richiesta .campo--figure::after,
+.richiesta .contatore::after,
+.richiesta .orari .campo::after {
+  display: none;
+}
+.richiesta .campo.errore > span:first-child {
+  color: #8a1c12;
+}
+.richiesta .nascosto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scelta__campo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(11, 11, 10, 0.35);
+  background: none;
+  color: var(--nero);
+  font: inherit;
+  font-size: 17px;
+  text-align: left;
+  cursor: pointer;
+}
+.scelta__campo:focus-visible {
+  outline: none;
+}
+.scelta__campo.vuoto .scelta__valore {
+  color: rgba(11, 11, 10, 0.45);
+}
+.scelta__valore {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scelta__valore::first-letter {
+  text-transform: uppercase;
+}
+.scelta__icona {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition:
+    background-color 0.35s var(--curva),
+    color 0.35s var(--curva),
+    transform 0.5s var(--curva);
+}
+.scelta__icona svg {
+  width: 12px;
+  height: 12px;
+}
+.campo--scelta .scelta__icona svg[viewBox='0 0 18 18'] {
+  width: 16px;
+  height: 16px;
+}
+@media (hover: hover) {
+  .scelta__campo:hover .scelta__icona {
+    background: var(--nero);
+    color: var(--oro);
+  }
+}
+.campo.aperto .scelta__icona {
+  background: var(--nero);
+  color: var(--oro);
+  transform: rotate(180deg);
+}
+.campo.aperto .scelta__icona:has(svg[viewBox='0 0 18 18']) {
+  transform: none;
+}
+.richiesta .campo.errore .scelta__campo {
+  border-color: #8a1c12;
+}
+
+.scelta__lista,
+.calendario {
+  --linea: rgba(242, 237, 227, 0.12);
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 10px);
+  left: 0;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  border-radius: 20px;
+  background: var(--nero);
+  color: var(--osso);
+  box-shadow:
+    0 30px 60px -20px rgba(11, 11, 10, 0.55),
+    0 0 0 1px rgba(242, 237, 227, 0.06) inset;
+}
+.scelta__lista {
+  right: 0;
+  max-height: 320px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 237, 227, 0.2) transparent;
+}
+.scelta__voce {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 13px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  transition:
+    background-color 0.25s,
+    color 0.25s,
+    gap 0.45s var(--curva);
+}
+.scelta__segno {
+  display: grid;
+  place-items: center;
+  width: 0;
+  overflow: hidden;
+  color: var(--oro);
+  transition: width 0.45s var(--curva);
+}
+.scelta__segno svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+  transform: rotate(-90deg) scale(0);
+  transition: transform 0.45s var(--curva);
+}
+.scelta__voce:focus,
+.scelta__voce--scelta {
+  gap: 12px;
+}
+.scelta__voce:focus .scelta__segno,
+.scelta__voce--scelta .scelta__segno {
+  width: 11px;
+}
+.scelta__voce:focus .scelta__segno svg,
+.scelta__voce--scelta .scelta__segno svg {
+  transform: none;
+}
+.scelta__voce:focus {
+  background: var(--carbone-2);
+}
+.scelta__voce--scelta {
+  color: var(--oro);
+}
+@media (hover: hover) {
+  .scelta__voce:hover {
+    gap: 12px;
+    background: var(--carbone-2);
+  }
+  .scelta__voce:hover .scelta__segno {
+    width: 11px;
+  }
+  .scelta__voce:hover .scelta__segno svg {
+    transform: none;
+  }
+}
+
+.calendario {
+  width: 340px;
+  max-width: calc(100vw - 2 * var(--margine));
+  padding: 18px 16px 14px;
+}
+.calendario__testa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.calendario__mese {
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+.calendario__mese::first-letter {
+  text-transform: uppercase;
+}
+.calendario__freccia {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  background: none;
+  color: var(--osso);
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--curva),
+    color 0.3s var(--curva),
+    border-color 0.3s var(--curva),
+    opacity 0.3s;
+}
+.calendario__freccia svg {
+  width: 7px;
+  height: 11px;
+}
+.calendario__freccia:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+@media (hover: hover) {
+  .calendario__freccia:not(:disabled):hover {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: var(--nero);
+  }
+}
+.calendario__settimana,
+.calendario__giorni {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.calendario__settimana span {
+  padding: 4px 0 8px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--grigio);
+}
+.calendario__giorni {
+  row-gap: 2px;
+  min-height: 252px;
+  align-content: start;
+}
+.calendario__giorno {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--osso);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
+}
+.calendario__giorno span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transition:
+    background-color 0.25s,
+    color 0.25s,
+    box-shadow 0.25s;
+}
+.calendario__giorno:disabled {
+  color: rgba(242, 237, 227, 0.22);
+  cursor: default;
+}
+.calendario__giorno--oggi span {
+  box-shadow: inset 0 0 0 1px var(--oro);
+}
+.calendario__giorno:focus-visible span {
+  background: var(--carbone-2);
+}
+@media (hover: hover) {
+  .calendario__giorno:not(:disabled):hover span {
+    background: var(--carbone-2);
+  }
+}
+.calendario__giorno--scelto span,
+.calendario__giorno--scelto:hover span,
+.calendario__giorno--scelto:focus-visible span {
+  background: var(--oro) !important;
+  color: var(--nero);
+  box-shadow: none;
+}
+.calendario__piede {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--linea);
+}
+.calendario__oggi {
+  padding: 8px 16px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: none;
+  color: var(--osso);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--curva),
+    color 0.3s var(--curva),
+    border-color 0.3s var(--curva);
+}
+@media (hover: hover) {
+  .calendario__oggi:hover {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: var(--nero);
+  }
+}
+.calendario__scelta {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--grigio);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contatore__riga {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(11, 11, 10, 0.35);
+  transition: border-color 0.3s var(--curva);
+}
+.contatore:focus-within .contatore__riga,
+.contatore--pieno .contatore__riga {
+  border-color: var(--nero);
+}
+.richiesta .contatore__riga input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 0;
+  border: 0;
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.contatore__tasto {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(11, 11, 10, 0.3);
+  border-radius: 50%;
+  background: none;
+  color: var(--nero);
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--curva),
+    color 0.3s var(--curva),
+    border-color 0.3s var(--curva),
+    opacity 0.3s;
+}
+.contatore__tasto svg {
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+}
+.contatore__tasto:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+@media (hover: hover) {
+  .contatore__tasto:not(:disabled):hover {
+    background: var(--nero);
+    border-color: var(--nero);
+    color: var(--oro);
+  }
+}
+
+.orari {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.orari .campo {
+  gap: 0;
+}
+.orari .scelta__lista {
+  max-height: 260px;
+}
+
+.piede__gruppi {
+  flex-wrap: wrap;
+}
+.firma {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+.richiesta .campo.aperto,
+.richiesta .campo:has(.aperto) {
+  z-index: 30;
 }
