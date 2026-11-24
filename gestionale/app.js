@@ -8,7 +8,10 @@ import {
   estraiContatti,
   applicaContatti,
   estraiGoogle,
-  applicaGoogle
+  applicaGoogle,
+  SFONDI,
+  estraiSfondo,
+  applicaSfondo
 } from './contenuto.js';
 import { archivio, controllaAccesso, salvaAccesso, fotoSalvata, azzera } from './demo.js';
 
@@ -23,14 +26,15 @@ let mod = nuoveModifiche();
 let vista = 'apertura';
 
 function nuoveModifiche() {
-  return { testi: {}, immagini: {}, contatti: {}, google: {} };
+  return { testi: {}, immagini: {}, contatti: {}, google: {}, sfondo: null };
 }
 function numeroModifiche() {
   return (
     Object.keys(mod.testi).length +
     Object.keys(mod.immagini).length +
     Object.keys(mod.contatti).length +
-    Object.keys(mod.google).length
+    Object.keys(mod.google).length +
+    (mod.sfondo ? 1 : 0)
   );
 }
 
@@ -123,7 +127,8 @@ async function caricaContenuti() {
     testi: Object.fromEntries(estraiTesti(html).map((t) => [t.key, t])),
     immagini: Object.fromEntries(estraiImmagini(html).map((i) => [i.slot, i])),
     contatti: estraiContatti(html),
-    google: estraiGoogle(html)
+    google: estraiGoogle(html),
+    sfondo: estraiSfondo(html)
   };
   void js;
 }
@@ -150,6 +155,7 @@ function costruisciMenu() {
   SEZIONI.forEach((s) => voce(s.id, s.nome));
   titolo('Sito');
   voce('immagini', 'Immagini');
+  voce('sfondo', 'Sfondo');
   voce('contatti', 'Contatti');
   voce('google', 'Google');
   titolo('Account');
@@ -162,6 +168,7 @@ function aggiornaMenu() {
   if (Object.keys(mod.immagini).length) cambiate.add('immagini');
   if (Object.keys(mod.contatti).length) cambiate.add('contatti');
   if (Object.keys(mod.google).length) cambiate.add('google');
+  if (mod.sfondo) cambiate.add('sfondo');
   document.querySelectorAll('#menu button').forEach((b) => {
     b.classList.toggle('attivo', b.dataset.vista === vista);
     const p = b.querySelector('.pallino');
@@ -244,6 +251,7 @@ function mostra(id) {
   if (id === 'immagini') mostraImmagini();
   else if (id === 'contatti') mostraContatti();
   else if (id === 'google') mostraGoogle();
+  else if (id === 'sfondo') mostraSfondo();
   else if (id === 'impostazioni') mostraImpostazioni();
   else mostraSezione(id);
   aggiornaMenu();
@@ -337,6 +345,34 @@ function mostraImmagini() {
       }
     });
     g.append(card);
+  });
+  c.append(g);
+}
+
+// sfondo
+function mostraSfondo() {
+  const c = intestazione(
+    'Sfondo',
+    "Lo sfondo animato dietro al titolo, in cima al sito. Scegline uno con un clic, poi guarda l'anteprima e pubblica."
+  );
+  const g = document.createElement('div');
+  g.className = 'sfondi';
+  const scelto = mod.sfondo || orig.sfondo;
+  SFONDI.forEach((s) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'sfondo-scelta' + (s.id === scelto ? ' sfondo-scelta--attivo' : '');
+    b.setAttribute('aria-pressed', s.id === scelto ? 'true' : 'false');
+    b.innerHTML = `<span class="sfondo-scelta__img"><img alt="" src="sfondi/${s.id}.webp"></span><span class="sfondo-scelta__piede"><span><b></b><small></small></span><em></em></span>`;
+    $('b', b).textContent = s.nome;
+    $('small', b).textContent = s.nota;
+    $('em', b).textContent = s.id === orig.sfondo ? 'Sul sito' : s.id === scelto ? 'Scelto' : '';
+    b.addEventListener('click', () => {
+      mod.sfondo = s.id === orig.sfondo ? null : s.id;
+      mostraSfondo();
+      aggiornaMenu();
+    });
+    g.append(b);
   });
   c.append(g);
 }
@@ -473,6 +509,7 @@ async function costruisci() {
     js = applicaContatti(js, contattiOra, nuovi);
   }
   if (Object.keys(mod.google).length) html = applicaGoogle(html, mod.google);
+  if (mod.sfondo) html = applicaSfondo(html, mod.sfondo);
   const nuoveFoto = {};
   const vecchie = new Set();
   for (const [slot, f] of Object.entries(mod.immagini)) {
@@ -537,6 +574,7 @@ $('#pubblica').addEventListener('click', async () => {
     if (ni) parti.push(ni === 1 ? '1 foto' : `${ni} foto`);
     if (Object.keys(mod.contatti).length) parti.push('contatti');
     if (Object.keys(mod.google).length) parti.push('Google');
+    if (mod.sfondo) parti.push('sfondo');
     if (Object.keys(file).length)
       await archivio.pubblica(file, 'Aggiornato dal gestionale: ' + parti.join(', '));
     mod = nuoveModifiche();

@@ -14,7 +14,11 @@
     punti = [];
   var cursore = { x: -9999, y: -9999, tx: -9999, ty: -9999, forza: 0 };
   var visibile = true;
-  var modo = (new URLSearchParams(location.search).get('sfondo') || 'piu').toLowerCase();
+  var modo = (
+    new URLSearchParams(location.search).get('sfondo') ||
+    canvas.dataset.sfondo ||
+    'fili'
+  ).toLowerCase();
   var tavoli = [],
     bolle = [],
     fili = [];

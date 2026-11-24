@@ -258,3 +258,24 @@ export function applicaGoogle(html, g) {
   }
   return html;
 }
+
+// sfondo dell'apertura
+export const SFONDI = [
+  {
+    id: 'fili',
+    nome: "Fili d'oro",
+    nota: 'Linee sottili che ondeggiano e si piegano al passaggio del mouse.'
+  },
+  { id: 'piu', nome: 'Griglia di +', nota: 'Il + del marchio ripetuto, si accende sotto la luce.' },
+  { id: 'tavoli', nome: 'Tavoli', nota: "Tavoli rotondi con le sedie, visti dall'alto." },
+  { id: 'bollicine', nome: 'Bollicine', nota: 'Bollicine di champagne che salgono piano.' }
+];
+
+export function estraiSfondo(html) {
+  return (html.match(/class="sfondo" data-sfondo="([a-z]+)"/) || [])[1] || 'fili';
+}
+
+export function applicaSfondo(html, id) {
+  if (!SFONDI.some((s) => s.id === id)) return html;
+  return html.replace(/(class="sfondo" data-sfondo=")[a-z]+(")/, '$1' + id + '$2');
+}
