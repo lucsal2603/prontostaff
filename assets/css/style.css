@@ -2240,3 +2240,7 @@ h2.rinforzo__frase {
 .richiesta .campo:has(.aperto) {
   z-index: 30;
 }
+.piede__dentro .piede__fondo {
+  padding-left: 0;
+  padding-right: 0;
+}
