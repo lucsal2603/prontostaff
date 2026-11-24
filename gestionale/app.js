@@ -14,6 +14,7 @@ import {
   applicaSfondo
 } from './contenuto.js';
 import { archivio, controllaAccesso, salvaAccesso, fotoSalvata, azzera } from './demo.js';
+import { avviaGuida, guidaVista } from './guida.js';
 
 const $ = (s, c = document) => c.querySelector(s);
 const SITO = '../';
@@ -119,7 +120,13 @@ async function entra() {
     costruisciMenu();
   }
   avviaInattivita();
+  if (orig && !guidaVista()) apriGuida();
 }
+
+function apriGuida() {
+  avviaGuida({ mostra, vistaAttuale: () => vista });
+}
+$('#apri-guida').addEventListener('click', apriGuida);
 
 async function caricaContenuti() {
   const [html, js] = await Promise.all([archivio.leggi('index.html'), archivio.leggi(FILE_JS)]);

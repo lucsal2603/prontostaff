@@ -588,3 +588,168 @@ textarea {
   font-size: 12px;
   color: var(--oro);
 }
+
+/* guida */
+.guida-tasto {
+  gap: 8px;
+}
+.guida-tasto svg {
+  width: 17px;
+  height: 17px;
+  color: var(--oro);
+}
+.guida {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  animation: guida-entra 0.35s var(--morbido) both;
+}
+.guida--esce {
+  opacity: 0;
+  transition: opacity 0.28s;
+}
+@keyframes guida-entra {
+  from {
+    opacity: 0;
+  }
+}
+.guida__blocco {
+  position: absolute;
+  inset: 0;
+}
+.guida__luce {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1.5px var(--oro),
+    0 0 0 6px rgba(233, 184, 60, 0.14),
+    0 0 0 200vmax rgba(5, 5, 4, 0.74);
+  pointer-events: none;
+  transition:
+    left 0.55s var(--morbido),
+    top 0.55s var(--morbido),
+    width 0.55s var(--morbido),
+    height 0.55s var(--morbido),
+    box-shadow 0.4s;
+}
+.guida__luce--spenta {
+  box-shadow:
+    0 0 0 0 transparent,
+    0 0 0 0 transparent,
+    0 0 0 200vmax rgba(5, 5, 4, 0.8);
+}
+.guida__scheda {
+  position: fixed;
+  width: min(360px, calc(100vw - 32px));
+  padding: 22px 22px 18px;
+  border: 1px solid rgba(233, 184, 60, 0.35);
+  border-radius: 18px;
+  background: var(--carbone);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transition:
+    left 0.55s var(--morbido),
+    top 0.55s var(--morbido);
+}
+.guida__scheda--entra .guida__conta,
+.guida__scheda--entra h2,
+.guida__scheda--entra .guida__testo {
+  animation: guida-testo 0.5s var(--morbido) both;
+}
+.guida__scheda--entra h2 {
+  animation-delay: 0.04s;
+}
+.guida__scheda--entra .guida__testo {
+  animation-delay: 0.08s;
+}
+@keyframes guida-testo {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.guida__barra {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--linea);
+}
+.guida__barra i {
+  display: block;
+  height: 100%;
+  background: var(--oro);
+  transform-origin: 0 50%;
+  transition: transform 0.55s var(--morbido);
+}
+.guida__conta {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oro);
+}
+.guida__scheda h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.guida__testo {
+  margin: 0 0 18px;
+  font-size: 15px;
+  color: var(--osso-2);
+}
+.guida__tasti {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.guida__tasti > span {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.guida__salta {
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--grigio);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.guida__salta:hover {
+  color: var(--osso);
+}
+.guida__scheda--basso {
+  left: 12px !important;
+  right: 12px;
+  top: auto !important;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  width: auto;
+}
+.guida__scheda--basso.guida__scheda--alto {
+  top: 12px !important;
+  bottom: auto;
+}
+@media (max-width: 760px) {
+  .guida-tasto {
+    padding: 0 11px;
+  }
+  .guida-tasto span {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guida,
+  .guida__luce,
+  .guida__scheda,
+  .guida__barra i {
+    animation: none;
+    transition: none;
+  }
+}
